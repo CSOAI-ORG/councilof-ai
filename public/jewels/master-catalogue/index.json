@@ -1,8 +1,8 @@
 {
  "schema": "csoai.master-catalogue/0.1",
  "title": "CSOAI — Master Catalogue of All Jewels",
- "edition": "2026-11-13",
- "published_at": "2026-11-13T12:23:35.726Z",
+ "edition": "2026-11-26",
+ "published_at": "2026-11-26T14:02:45.741Z",
  "page": "https://councilof.ai/jewels/master-catalogue/",
  "what_this_is": "The estate’s master catalogue of every jewel, state-checked, with the state table repaired at the source and the board read live.",
  "what_this_is_not": [
@@ -168,7 +168,7 @@
   ]
  },
  "live_state": {
-  "read_at": "2026-11-13T12:23:35.726Z",
+  "read_at": "2026-11-26T14:02:45.741Z",
   "board": {
    "url": "https://councilof.ai/api/gspc",
    "http": 200,
@@ -177,22 +177,22 @@
    "unmeasured_axes": 0,
    "public_count": "34 axes · 34 measured",
    "separation": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
-   "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 5ec3c714c943c50cb863065ebb0b5dbc2ddecb1dbf30960b56b0d337a62ee4e1) by scripts/surface/rebind-catalogue-live-state.mjs"
+   "board_count_source": "derived from this commit's /api/gspc (functions/api/gspc.ts, computed offline by scripts/surface/commit-board.mjs; sha256 b9a96a3f26f546051282b00f3161d2d93501579a0eec9a2c12b0ecfd4375a38e) by scripts/surface/rebind-catalogue-live-state.mjs"
   },
   "unmeasured_axes": [],
   "public_root": {
    "url": "https://councilof.ai/root.json",
    "http": 200,
-   "card_count": 442,
-   "as_of": "2026-11-08T00:36:07Z",
-   "merkle_root": "e9da68742ed8a726497800df885d69b2d6101620d90f601b01b8a8437806cc53",
-   "count_digest": "8893b2db1d877554a913882833bfa809cabb0840a62fded6af5166103e79dabf"
+   "card_count": 452,
+   "as_of": "2026-11-21T23:11:50Z",
+   "merkle_root": "bc4d3395054bad8ddc2b90d28d376f8b0e5200af05080b5d8affdfe566020672",
+   "count_digest": "248a11784ec9e52eee7a03356b93c4b11b38117852d2b32f7924c52f0658f6ef"
   },
   "corrections_ledger": {
    "url": "https://councilof.ai/api/corrections",
    "http": 200,
-   "entries": 93,
-   "count_digest": "e6f32133e245440619608c3401dc56a77fb7993645da2d229232d2f8c2bac468"
+   "entries": 97,
+   "count_digest": "4138a659bd9de2a9a4e4e86732ae7cef85c34ebd1c85806cc872b3676d1b41c4"
   },
   "x402_catalogue": {
    "url": "https://councilof.ai/api/x402",
@@ -248,7 +248,7 @@
    },
    "count_digest": "d0d35d06220a5b0654882282091f21eadbdca67c8263b1af514993dd622e0c53"
   },
-  "open_pull_requests": 72
+  "open_pull_requests": 167
  },
  "counts": {
   "jewel_rows": 130,
@@ -4147,15 +4147,2090 @@
   "https://councilof.ai/interop/subject-axis-live-20261027/README.md",
   "https://councilof.ai/jewels/master-catalogue/index.json"
  ],
- "supersedes_edition": "2026-11-12",
+ "supersedes_edition": "2026-11-13",
  "edition_written_by": "scripts/surface/rebind-catalogue-live-state.mjs",
  "lane_activity": {
   "what_this_is": "What the other sessions working this estate merged since the edition this one supersedes, so the catalogue is the reconciled picture rather than one lane's view. The window is named here, the list is complete for it, and the open-pull-request count is the live one read at the same moment as the rest of this block.",
-  "window_start": "2026-11-12T00:00:00Z",
-  "window_end": "2026-11-13T12:23:35.726Z",
-  "window_start_source": "the edition this one supersedes (2026-11-12)",
-  "merged_count": 66,
+  "window_start": "2026-11-13T00:00:00Z",
+  "window_end": "2026-11-26T14:02:45.741Z",
+  "window_start_source": "the edition this one supersedes (2026-11-13)",
+  "merged_count": 451,
   "merged": [
+   {
+    "merged_at": "2026-11-26T08:56:51Z",
+    "sha": "6d30b4fcbc",
+    "pr": 4920
+   },
+   {
+    "merged_at": "2026-11-26T07:10:34Z",
+    "sha": "d99326b8eb",
+    "pr": 4908
+   },
+   {
+    "merged_at": "2026-11-26T07:08:31Z",
+    "sha": "c885dffdee",
+    "pr": 4916
+   },
+   {
+    "merged_at": "2026-11-26T07:03:16Z",
+    "sha": "27c0bc3cf9",
+    "pr": 4915
+   },
+   {
+    "merged_at": "2026-11-26T06:53:42Z",
+    "sha": "b003f7ba72",
+    "pr": 4914
+   },
+   {
+    "merged_at": "2026-11-26T06:50:24Z",
+    "sha": "611be7fd4a",
+    "pr": 4902
+   },
+   {
+    "merged_at": "2026-11-26T06:18:37Z",
+    "sha": "12c8bdd587",
+    "pr": 4861
+   },
+   {
+    "merged_at": "2026-11-26T06:12:40Z",
+    "sha": "39666ec5ac",
+    "pr": 4910
+   },
+   {
+    "merged_at": "2026-11-26T06:12:35Z",
+    "sha": "90c1b04b25",
+    "pr": 4903
+   },
+   {
+    "merged_at": "2026-11-26T04:02:05Z",
+    "sha": "e63398fdcd",
+    "pr": 4755
+   },
+   {
+    "merged_at": "2026-11-26T03:46:41Z",
+    "sha": "1925de4473",
+    "pr": 4905
+   },
+   {
+    "merged_at": "2026-11-26T03:35:49Z",
+    "sha": "0c075a4cbe",
+    "pr": 4751
+   },
+   {
+    "merged_at": "2026-11-26T02:59:31Z",
+    "sha": "6da30b32ae",
+    "pr": 4904
+   },
+   {
+    "merged_at": "2026-11-26T02:29:18Z",
+    "sha": "cf767b2c24",
+    "pr": 4826
+   },
+   {
+    "merged_at": "2026-11-25T22:09:18Z",
+    "sha": "07ccfc585a",
+    "pr": 4900
+   },
+   {
+    "merged_at": "2026-11-25T22:09:15Z",
+    "sha": "6b69937be8",
+    "pr": 4899
+   },
+   {
+    "merged_at": "2026-11-25T18:15:33Z",
+    "sha": "7f9f9d0c24",
+    "pr": 4895
+   },
+   {
+    "merged_at": "2026-11-25T17:49:29Z",
+    "sha": "f135407ac4",
+    "pr": 4894
+   },
+   {
+    "merged_at": "2026-11-25T17:47:54Z",
+    "sha": "a518bdf87f",
+    "pr": 4891
+   },
+   {
+    "merged_at": "2026-11-25T15:01:56Z",
+    "sha": "75c6bd2a55",
+    "pr": 4890
+   },
+   {
+    "merged_at": "2026-11-25T15:01:04Z",
+    "sha": "44c8575d5b",
+    "pr": 4889
+   },
+   {
+    "merged_at": "2026-11-25T12:43:47Z",
+    "sha": "0823468585",
+    "pr": 4877
+   },
+   {
+    "merged_at": "2026-11-25T12:43:00Z",
+    "sha": "bb9bfdb405",
+    "pr": 4879
+   },
+   {
+    "merged_at": "2026-11-25T12:42:47Z",
+    "sha": "5f9cf15808",
+    "pr": 4876
+   },
+   {
+    "merged_at": "2026-11-25T09:16:23Z",
+    "sha": "0327b15e0b",
+    "pr": 4884
+   },
+   {
+    "merged_at": "2026-11-25T09:08:53Z",
+    "sha": "7c46342d26",
+    "pr": 4883
+   },
+   {
+    "merged_at": "2026-11-25T06:09:42Z",
+    "sha": "8c8fb7a693",
+    "pr": 4878
+   },
+   {
+    "merged_at": "2026-11-25T05:58:40Z",
+    "sha": "48bde60326",
+    "pr": 4874
+   },
+   {
+    "merged_at": "2026-11-25T05:51:04Z",
+    "sha": "43bdf26df2",
+    "pr": 4872
+   },
+   {
+    "merged_at": "2026-11-25T05:24:59Z",
+    "sha": "b89b556c2c",
+    "pr": 4670
+   },
+   {
+    "merged_at": "2026-11-25T05:24:57Z",
+    "sha": "5582e3d36e",
+    "pr": 4714
+   },
+   {
+    "merged_at": "2026-11-25T05:22:30Z",
+    "sha": "9ab560221d",
+    "pr": 4871
+   },
+   {
+    "merged_at": "2026-11-25T05:08:46Z",
+    "sha": "a7034cf842",
+    "pr": 4870
+   },
+   {
+    "merged_at": "2026-11-25T04:51:59Z",
+    "sha": "b7f692169e",
+    "pr": 4869
+   },
+   {
+    "merged_at": "2026-11-25T04:38:53Z",
+    "sha": "2234772e07",
+    "pr": 4868
+   },
+   {
+    "merged_at": "2026-11-25T04:09:28Z",
+    "sha": "ad98308803",
+    "pr": 4866
+   },
+   {
+    "merged_at": "2026-11-25T04:01:37Z",
+    "sha": "2a0acab86e",
+    "pr": 4865
+   },
+   {
+    "merged_at": "2026-11-25T03:31:54Z",
+    "sha": "5316f84018",
+    "pr": 4864
+   },
+   {
+    "merged_at": "2026-11-25T03:24:21Z",
+    "sha": "a7d18d56d7",
+    "pr": 4863
+   },
+   {
+    "merged_at": "2026-11-25T03:19:23Z",
+    "sha": "b2c96ff5d1",
+    "pr": 4862
+   },
+   {
+    "merged_at": "2026-11-25T02:53:30Z",
+    "sha": "0e960e5a32",
+    "pr": 4784
+   },
+   {
+    "merged_at": "2026-11-25T02:41:56Z",
+    "sha": "427bc07178",
+    "pr": 4824
+   },
+   {
+    "merged_at": "2026-11-25T02:40:58Z",
+    "sha": "a7d1c00335",
+    "pr": 4836
+   },
+   {
+    "merged_at": "2026-11-25T02:40:27Z",
+    "sha": "de29fc621e",
+    "pr": 4834
+   },
+   {
+    "merged_at": "2026-11-24T22:54:47Z",
+    "sha": "4d2edb3bb8",
+    "pr": 4859
+   },
+   {
+    "merged_at": "2026-11-24T22:54:12Z",
+    "sha": "f7007c738c",
+    "pr": 4858
+   },
+   {
+    "merged_at": "2026-11-24T18:59:26Z",
+    "sha": "eded2576cd",
+    "pr": 4854
+   },
+   {
+    "merged_at": "2026-11-24T18:39:18Z",
+    "sha": "6c27997682",
+    "pr": 4853
+   },
+   {
+    "merged_at": "2026-11-24T18:31:26Z",
+    "sha": "74e2853d81",
+    "pr": 4851
+   },
+   {
+    "merged_at": "2026-11-24T15:23:18Z",
+    "sha": "a23e4feb40",
+    "pr": 4849
+   },
+   {
+    "merged_at": "2026-11-24T15:21:31Z",
+    "sha": "6e9f2c113c",
+    "pr": 4848
+   },
+   {
+    "merged_at": "2026-11-24T10:32:37Z",
+    "sha": "2232b48da9",
+    "pr": 4844
+   },
+   {
+    "merged_at": "2026-11-24T10:27:45Z",
+    "sha": "bcf6c99b36",
+    "pr": 4843
+   },
+   {
+    "merged_at": "2026-11-24T04:29:21Z",
+    "sha": "b88b88a40f",
+    "pr": 4827
+   },
+   {
+    "merged_at": "2026-11-24T04:26:37Z",
+    "sha": "cfd773af77",
+    "pr": 4474
+   },
+   {
+    "merged_at": "2026-11-24T04:26:37Z",
+    "sha": "cfd773af77",
+    "pr": 4587
+   },
+   {
+    "merged_at": "2026-11-24T04:26:37Z",
+    "sha": "cfd773af77",
+    "pr": 4333
+   },
+   {
+    "merged_at": "2026-11-24T04:26:35Z",
+    "sha": "1b2febf968",
+    "pr": 4838
+   },
+   {
+    "merged_at": "2026-11-24T04:18:14Z",
+    "sha": "3af1f80813",
+    "pr": 4837
+   },
+   {
+    "merged_at": "2026-11-24T04:01:10Z",
+    "sha": "d9c05c44c6",
+    "pr": 4830
+   },
+   {
+    "merged_at": "2026-11-24T03:58:29Z",
+    "sha": "47359331b3",
+    "pr": 4832
+   },
+   {
+    "merged_at": "2026-11-24T03:58:02Z",
+    "sha": "dfb353b4ba",
+    "pr": 4831
+   },
+   {
+    "merged_at": "2026-11-24T03:39:44Z",
+    "sha": "8fbd9ba62d",
+    "pr": 4663
+   },
+   {
+    "merged_at": "2026-11-24T03:31:27Z",
+    "sha": "8f2652b388",
+    "pr": 4773
+   },
+   {
+    "merged_at": "2026-11-24T03:31:09Z",
+    "sha": "f61681b35a",
+    "pr": 4770
+   },
+   {
+    "merged_at": "2026-11-24T03:20:56Z",
+    "sha": "ffa909ed41",
+    "pr": 4823
+   },
+   {
+    "merged_at": "2026-11-24T03:17:31Z",
+    "sha": "ea22503ea6",
+    "pr": 4825
+   },
+   {
+    "merged_at": "2026-11-24T03:13:32Z",
+    "sha": "d6c327356b",
+    "pr": 4806
+   },
+   {
+    "merged_at": "2026-11-24T03:10:50Z",
+    "sha": "37d073e2a6",
+    "pr": 4573
+   },
+   {
+    "merged_at": "2026-11-24T03:08:04Z",
+    "sha": "80391e9ccc",
+    "pr": 4816
+   },
+   {
+    "merged_at": "2026-11-24T02:58:52Z",
+    "sha": "2f106d3e6d",
+    "pr": 4821
+   },
+   {
+    "merged_at": "2026-11-24T02:50:25Z",
+    "sha": "4a4178804c",
+    "pr": 4757
+   },
+   {
+    "merged_at": "2026-11-24T02:43:17Z",
+    "sha": "bc0dc6880e",
+    "pr": 4814
+   },
+   {
+    "merged_at": "2026-11-24T02:42:23Z",
+    "sha": "d185248acf",
+    "pr": 4820
+   },
+   {
+    "merged_at": "2026-11-24T02:42:23Z",
+    "sha": "29ed7bc411",
+    "pr": 4476
+   },
+   {
+    "merged_at": "2026-11-24T02:42:23Z",
+    "sha": "29ed7bc411",
+    "pr": 3928
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4358
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4590
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4731
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4781
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4397
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4436
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4336
+   },
+   {
+    "merged_at": "2026-11-24T02:42:22Z",
+    "sha": "29ed7bc411",
+    "pr": 4507
+   },
+   {
+    "merged_at": "2026-11-24T02:42:19Z",
+    "sha": "9830e5e88c",
+    "pr": 4811
+   },
+   {
+    "merged_at": "2026-11-24T02:41:44Z",
+    "sha": "2eef497304",
+    "pr": 4764
+   },
+   {
+    "merged_at": "2026-11-24T02:39:21Z",
+    "sha": "284427fece",
+    "pr": 4795
+   },
+   {
+    "merged_at": "2026-11-24T02:35:42Z",
+    "sha": "adeb5134f3",
+    "pr": 4812
+   },
+   {
+    "merged_at": "2026-11-24T02:33:21Z",
+    "sha": "250e1ed667",
+    "pr": 4807
+   },
+   {
+    "merged_at": "2026-11-24T02:31:10Z",
+    "sha": "74039b707a",
+    "pr": 4819
+   },
+   {
+    "merged_at": "2026-11-24T02:26:02Z",
+    "sha": "56be06bcef",
+    "pr": 4738
+   },
+   {
+    "merged_at": "2026-11-24T02:25:07Z",
+    "sha": "73f3e9d01d",
+    "pr": 4796
+   },
+   {
+    "merged_at": "2026-11-24T02:24:40Z",
+    "sha": "ec42b30c8f",
+    "pr": 4817
+   },
+   {
+    "merged_at": "2026-11-24T02:20:43Z",
+    "sha": "f0c3bf765a",
+    "pr": 4798
+   },
+   {
+    "merged_at": "2026-11-24T02:19:01Z",
+    "sha": "0000b3a53c",
+    "pr": 4801
+   },
+   {
+    "merged_at": "2026-11-24T02:17:33Z",
+    "sha": "877ed87e0b",
+    "pr": 4813
+   },
+   {
+    "merged_at": "2026-11-24T02:06:03Z",
+    "sha": "25ca7cbb53",
+    "pr": 4752
+   },
+   {
+    "merged_at": "2026-11-24T02:06:01Z",
+    "sha": "3978755c45",
+    "pr": 4749
+   },
+   {
+    "merged_at": "2026-11-24T02:05:59Z",
+    "sha": "b2c4857860",
+    "pr": 4748
+   },
+   {
+    "merged_at": "2026-11-24T02:05:57Z",
+    "sha": "74ffbd094e",
+    "pr": 4808
+   },
+   {
+    "merged_at": "2026-11-24T02:05:55Z",
+    "sha": "14a3ef2b32",
+    "pr": 4800
+   },
+   {
+    "merged_at": "2026-11-24T02:05:53Z",
+    "sha": "8b778af8b1",
+    "pr": 4802
+   },
+   {
+    "merged_at": "2026-11-24T02:05:51Z",
+    "sha": "35714ea6c1",
+    "pr": 4785
+   },
+   {
+    "merged_at": "2026-11-24T02:05:48Z",
+    "sha": "286abefcda",
+    "pr": 4645
+   },
+   {
+    "merged_at": "2026-11-24T02:05:12Z",
+    "sha": "a5dfd70093",
+    "pr": 4797
+   },
+   {
+    "merged_at": "2026-11-24T01:59:59Z",
+    "sha": "ddfbf80cd0",
+    "pr": 4787
+   },
+   {
+    "merged_at": "2026-11-24T01:47:31Z",
+    "sha": "24cc5b26cf",
+    "pr": 4794
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4380
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 3903
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4470
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 3881
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 3992
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4351
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4495
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4712
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4327
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4768
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4426
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4501
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4438
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4583
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4771
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4720
+   },
+   {
+    "merged_at": "2026-11-24T01:31:06Z",
+    "sha": "6b6bf2c8c5",
+    "pr": 4387
+   },
+   {
+    "merged_at": "2026-11-24T01:31:03Z",
+    "sha": "48ec5960b5",
+    "pr": 4804
+   },
+   {
+    "merged_at": "2026-11-24T01:12:16Z",
+    "sha": "dc1f535043",
+    "pr": 4620
+   },
+   {
+    "merged_at": "2026-11-24T00:57:10Z",
+    "sha": "6010adda61",
+    "pr": 4655
+   },
+   {
+    "merged_at": "2026-11-24T00:43:30Z",
+    "sha": "6303b843dc",
+    "pr": 4792
+   },
+   {
+    "merged_at": "2026-11-24T00:38:57Z",
+    "sha": "73160806f2",
+    "pr": 4793
+   },
+   {
+    "merged_at": "2026-11-24T00:35:44Z",
+    "sha": "33b7a5597a",
+    "pr": 4791
+   },
+   {
+    "merged_at": "2026-11-24T00:22:43Z",
+    "sha": "598a0fe89f",
+    "pr": 4762
+   },
+   {
+    "merged_at": "2026-11-23T22:21:26Z",
+    "sha": "9c78c84043",
+    "pr": 4780
+   },
+   {
+    "merged_at": "2026-11-23T22:06:31Z",
+    "sha": "b5aea10b65",
+    "pr": 4782
+   },
+   {
+    "merged_at": "2026-11-23T20:39:56Z",
+    "sha": "d5dc1c0b9b",
+    "pr": 4777
+   },
+   {
+    "merged_at": "2026-11-23T20:22:44Z",
+    "sha": "5cdeea806e",
+    "pr": 4779
+   },
+   {
+    "merged_at": "2026-11-23T18:59:33Z",
+    "sha": "2818299bdd",
+    "pr": 4776
+   },
+   {
+    "merged_at": "2026-11-23T18:57:33Z",
+    "sha": "51c46390a4",
+    "pr": 4774
+   },
+   {
+    "merged_at": "2026-11-23T15:21:46Z",
+    "sha": "99651e0f48",
+    "pr": 4769
+   },
+   {
+    "merged_at": "2026-11-23T10:12:11Z",
+    "sha": "f56cd9dbe5",
+    "pr": 4766
+   },
+   {
+    "merged_at": "2026-11-23T09:56:35Z",
+    "sha": "f59bb5eee6",
+    "pr": 4765
+   },
+   {
+    "merged_at": "2026-11-23T09:44:21Z",
+    "sha": "d7e789dfcd",
+    "pr": 4763
+   },
+   {
+    "merged_at": "2026-11-23T09:02:56Z",
+    "sha": "ea63106273",
+    "pr": 4742
+   },
+   {
+    "merged_at": "2026-11-23T08:49:27Z",
+    "sha": "3f400ec457",
+    "pr": 4756
+   },
+   {
+    "merged_at": "2026-11-23T08:21:13Z",
+    "sha": "15b450b170",
+    "pr": 4750
+   },
+   {
+    "merged_at": "2026-11-23T08:08:55Z",
+    "sha": "77be006931",
+    "pr": 4760
+   },
+   {
+    "merged_at": "2026-11-23T07:59:23Z",
+    "sha": "451b10f7ef",
+    "pr": 4747
+   },
+   {
+    "merged_at": "2026-11-23T07:45:39Z",
+    "sha": "a652860208",
+    "pr": 4741
+   },
+   {
+    "merged_at": "2026-11-23T07:33:55Z",
+    "sha": "b50b544dd4",
+    "pr": 4744
+   },
+   {
+    "merged_at": "2026-11-23T04:04:37Z",
+    "sha": "44b6e70a1b",
+    "pr": 4706
+   },
+   {
+    "merged_at": "2026-11-23T03:52:07Z",
+    "sha": "b817d247a3",
+    "pr": 4745
+   },
+   {
+    "merged_at": "2026-11-23T02:06:32Z",
+    "sha": "4f5946f7cd",
+    "pr": 4702
+   },
+   {
+    "merged_at": "2026-11-23T01:51:36Z",
+    "sha": "17ee28f851",
+    "pr": 4719
+   },
+   {
+    "merged_at": "2026-11-23T01:36:14Z",
+    "sha": "b2d7b0e3fb",
+    "pr": 4692
+   },
+   {
+    "merged_at": "2026-11-23T01:22:27Z",
+    "sha": "96b43c39f4",
+    "pr": 4740
+   },
+   {
+    "merged_at": "2026-11-23T01:19:03Z",
+    "sha": "e7ef13c2a3",
+    "pr": 4735
+   },
+   {
+    "merged_at": "2026-11-23T01:03:31Z",
+    "sha": "b7c97b44e3",
+    "pr": 4730
+   },
+   {
+    "merged_at": "2026-11-23T01:01:55Z",
+    "sha": "5145ec92a2",
+    "pr": 4739
+   },
+   {
+    "merged_at": "2026-11-23T00:55:21Z",
+    "sha": "b8b25999b7",
+    "pr": 4643
+   },
+   {
+    "merged_at": "2026-11-23T00:52:47Z",
+    "sha": "91f1acad43",
+    "pr": 4736
+   },
+   {
+    "merged_at": "2026-11-23T00:44:33Z",
+    "sha": "649a71cb4e",
+    "pr": 4687
+   },
+   {
+    "merged_at": "2026-11-23T00:40:51Z",
+    "sha": "929ac8b9d6",
+    "pr": 4710
+   },
+   {
+    "merged_at": "2026-11-22T20:05:17Z",
+    "sha": "f50386ac34",
+    "pr": 4733
+   },
+   {
+    "merged_at": "2026-11-22T15:03:20Z",
+    "sha": "154176575e",
+    "pr": 4726
+   },
+   {
+    "merged_at": "2026-11-22T12:58:28Z",
+    "sha": "5d9088ca93",
+    "pr": 4721
+   },
+   {
+    "merged_at": "2026-11-22T09:47:00Z",
+    "sha": "e03807647d",
+    "pr": 4611
+   },
+   {
+    "merged_at": "2026-11-22T09:46:59Z",
+    "sha": "8ada5eb626",
+    "pr": 4554
+   },
+   {
+    "merged_at": "2026-11-22T09:46:59Z",
+    "sha": "ae157d1716",
+    "pr": 4602
+   },
+   {
+    "merged_at": "2026-11-22T09:46:59Z",
+    "sha": "500dcfa80b",
+    "pr": 4459
+   },
+   {
+    "merged_at": "2026-11-22T09:46:59Z",
+    "sha": "b15a5d0a19",
+    "pr": 4435
+   },
+   {
+    "merged_at": "2026-11-22T09:46:59Z",
+    "sha": "766b12de36",
+    "pr": 4506
+   },
+   {
+    "merged_at": "2026-11-22T09:46:57Z",
+    "sha": "bc8c1f0bcd",
+    "pr": 4716
+   },
+   {
+    "merged_at": "2026-11-22T09:28:02Z",
+    "sha": "dc0d7633c4",
+    "pr": 4673
+   },
+   {
+    "merged_at": "2026-11-22T08:47:29Z",
+    "sha": "80f7ea5b67",
+    "pr": 4715
+   },
+   {
+    "merged_at": "2026-11-22T08:35:25Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4689
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4679
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4660
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4678
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4656
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4695
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4691
+   },
+   {
+    "merged_at": "2026-11-22T08:35:24Z",
+    "sha": "57e5bf9fdd",
+    "pr": 4677
+   },
+   {
+    "merged_at": "2026-11-22T08:35:22Z",
+    "sha": "67b71b069b",
+    "pr": 4698
+   },
+   {
+    "merged_at": "2026-11-22T08:22:33Z",
+    "sha": "c3d6aa2c12",
+    "pr": 4674
+   },
+   {
+    "merged_at": "2026-11-22T08:10:36Z",
+    "sha": "18ad7e1da8",
+    "pr": 4681
+   },
+   {
+    "merged_at": "2026-11-22T08:00:49Z",
+    "sha": "3840ed61da",
+    "pr": 4671
+   },
+   {
+    "merged_at": "2026-11-22T08:00:49Z",
+    "sha": "150817741e",
+    "pr": 4665
+   },
+   {
+    "merged_at": "2026-11-22T08:00:49Z",
+    "sha": "2a0a4d0446",
+    "pr": 4548
+   },
+   {
+    "merged_at": "2026-11-22T08:00:46Z",
+    "sha": "4ef760390e",
+    "pr": 4658
+   },
+   {
+    "merged_at": "2026-11-22T07:50:39Z",
+    "sha": "41328f7d8d",
+    "pr": 3860
+   },
+   {
+    "merged_at": "2026-11-22T07:37:54Z",
+    "sha": "0f1811e56f",
+    "pr": 4682
+   },
+   {
+    "merged_at": "2026-11-22T07:23:50Z",
+    "sha": "e0acba52bb",
+    "pr": 4680
+   },
+   {
+    "merged_at": "2026-11-22T07:04:44Z",
+    "sha": "d1f9826f5a",
+    "pr": 4683
+   },
+   {
+    "merged_at": "2026-11-22T06:55:47Z",
+    "sha": "9392237f7b",
+    "pr": 4696
+   },
+   {
+    "merged_at": "2026-11-22T06:55:24Z",
+    "sha": "151e95a68b",
+    "pr": 4701
+   },
+   {
+    "merged_at": "2026-11-22T06:50:07Z",
+    "sha": "829287d40a",
+    "pr": 4699
+   },
+   {
+    "merged_at": "2026-11-22T06:38:56Z",
+    "sha": "0505de27f4",
+    "pr": 4413
+   },
+   {
+    "merged_at": "2026-11-22T06:32:42Z",
+    "sha": "b33ee1e4f1",
+    "pr": 4555
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4632
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4628
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4634
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4624
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4630
+   },
+   {
+    "merged_at": "2026-11-22T06:10:09Z",
+    "sha": "f02f8f0bd1",
+    "pr": 4626
+   },
+   {
+    "merged_at": "2026-11-22T06:10:07Z",
+    "sha": "896bee5487",
+    "pr": 4675
+   },
+   {
+    "merged_at": "2026-11-22T05:56:43Z",
+    "sha": "36f688f7b4",
+    "pr": 4528
+   },
+   {
+    "merged_at": "2026-11-22T05:42:14Z",
+    "sha": "5ba15f607b",
+    "pr": 4616
+   },
+   {
+    "merged_at": "2026-11-22T05:28:55Z",
+    "sha": "53ae294d6f",
+    "pr": 4668
+   },
+   {
+    "merged_at": "2026-11-22T05:17:07Z",
+    "sha": "94d84717c5",
+    "pr": 4661
+   },
+   {
+    "merged_at": "2026-11-22T05:02:53Z",
+    "sha": "819b90c2dd",
+    "pr": 4654
+   },
+   {
+    "merged_at": "2026-11-22T05:02:53Z",
+    "sha": "819b90c2dd",
+    "pr": 4662
+   },
+   {
+    "merged_at": "2026-11-22T05:02:53Z",
+    "sha": "819b90c2dd",
+    "pr": 4570
+   },
+   {
+    "merged_at": "2026-11-22T05:02:53Z",
+    "sha": "819b90c2dd",
+    "pr": 4571
+   },
+   {
+    "merged_at": "2026-11-22T05:02:53Z",
+    "sha": "819b90c2dd",
+    "pr": 4574
+   },
+   {
+    "merged_at": "2026-11-22T05:02:51Z",
+    "sha": "fbc888b64c",
+    "pr": 4666
+   },
+   {
+    "merged_at": "2026-11-22T04:47:26Z",
+    "sha": "2aa13f208e",
+    "pr": 4667
+   },
+   {
+    "merged_at": "2026-11-22T04:36:47Z",
+    "sha": "67e67f46ee",
+    "pr": 4664
+   },
+   {
+    "merged_at": "2026-11-22T04:24:45Z",
+    "sha": "a9248334e9",
+    "pr": 4631
+   },
+   {
+    "merged_at": "2026-11-22T04:10:43Z",
+    "sha": "ba7f1cdcb0",
+    "pr": 4659
+   },
+   {
+    "merged_at": "2026-11-22T04:00:19Z",
+    "sha": "f6fa2cc833",
+    "pr": 4617
+   },
+   {
+    "merged_at": "2026-11-22T03:50:54Z",
+    "sha": "f2e5808dd2",
+    "pr": 4569
+   },
+   {
+    "merged_at": "2026-11-22T03:41:35Z",
+    "sha": "08f4e49e55",
+    "pr": 4653
+   },
+   {
+    "merged_at": "2026-11-22T03:28:59Z",
+    "sha": "0b5f33831a",
+    "pr": 4552
+   },
+   {
+    "merged_at": "2026-11-22T02:58:33Z",
+    "sha": "b41548e179",
+    "pr": 4648
+   },
+   {
+    "merged_at": "2026-11-22T02:42:36Z",
+    "sha": "31e9776e10",
+    "pr": 4640
+   },
+   {
+    "merged_at": "2026-11-22T02:36:22Z",
+    "sha": "0f584d022a",
+    "pr": 4598
+   },
+   {
+    "merged_at": "2026-11-22T02:34:28Z",
+    "sha": "85b861b300",
+    "pr": 4603
+   },
+   {
+    "merged_at": "2026-11-22T02:33:23Z",
+    "sha": "753a27545a",
+    "pr": 4606
+   },
+   {
+    "merged_at": "2026-11-22T02:31:56Z",
+    "sha": "c13b43dc2b",
+    "pr": 4639
+   },
+   {
+    "merged_at": "2026-11-22T02:30:31Z",
+    "sha": "8f519dbde4",
+    "pr": 4604
+   },
+   {
+    "merged_at": "2026-11-22T02:21:09Z",
+    "sha": "b4d10844ce",
+    "pr": 4642
+   },
+   {
+    "merged_at": "2026-11-22T02:12:01Z",
+    "sha": "08c1f6b911",
+    "pr": 4638
+   },
+   {
+    "merged_at": "2026-11-22T01:13:46Z",
+    "sha": "36ac8de543",
+    "pr": 4637
+   },
+   {
+    "merged_at": "2026-11-21T21:11:17Z",
+    "sha": "a79c743a36",
+    "pr": 4633
+   },
+   {
+    "merged_at": "2026-11-21T19:50:04Z",
+    "sha": "b0140b8d37",
+    "pr": 4635
+   },
+   {
+    "merged_at": "2026-11-21T15:36:17Z",
+    "sha": "c0564b2e6f",
+    "pr": 4627
+   },
+   {
+    "merged_at": "2026-11-21T15:06:18Z",
+    "sha": "5f33901721",
+    "pr": 4629
+   },
+   {
+    "merged_at": "2026-11-21T13:06:48Z",
+    "sha": "44fb9a6e54",
+    "pr": 4625
+   },
+   {
+    "merged_at": "2026-11-21T10:05:46Z",
+    "sha": "87deb27881",
+    "pr": 4582
+   },
+   {
+    "merged_at": "2026-11-21T09:20:36Z",
+    "sha": "2e621f5f75",
+    "pr": 4559
+   },
+   {
+    "merged_at": "2026-11-21T09:09:45Z",
+    "sha": "42e298847c",
+    "pr": 4484
+   },
+   {
+    "merged_at": "2026-11-21T07:45:28Z",
+    "sha": "1ea38a9fdb",
+    "pr": 4621
+   },
+   {
+    "merged_at": "2026-11-21T07:23:13Z",
+    "sha": "911b639f1b",
+    "pr": 4518
+   },
+   {
+    "merged_at": "2026-11-21T06:35:37Z",
+    "sha": "48b64fcac1",
+    "pr": 4595
+   },
+   {
+    "merged_at": "2026-11-21T04:40:07Z",
+    "sha": "a0fcb895a3",
+    "pr": 4544
+   },
+   {
+    "merged_at": "2026-11-21T03:43:33Z",
+    "sha": "b2386cfeea",
+    "pr": 4539
+   },
+   {
+    "merged_at": "2026-11-21T03:09:10Z",
+    "sha": "8aec6249bb",
+    "pr": 4608
+   },
+   {
+    "merged_at": "2026-11-21T03:09:10Z",
+    "sha": "d5b3c006d4",
+    "pr": 4609
+   },
+   {
+    "merged_at": "2026-11-21T03:09:08Z",
+    "sha": "010fb39c4e",
+    "pr": 4612
+   },
+   {
+    "merged_at": "2026-11-21T02:57:24Z",
+    "sha": "f2a09e2e89",
+    "pr": 4575
+   },
+   {
+    "merged_at": "2026-11-21T02:46:11Z",
+    "sha": "5e1e0e4980",
+    "pr": 4610
+   },
+   {
+    "merged_at": "2026-11-21T02:36:02Z",
+    "sha": "adb4948eff",
+    "pr": 4560
+   },
+   {
+    "merged_at": "2026-11-21T02:36:02Z",
+    "sha": "a1fd9c300a",
+    "pr": 4566
+   },
+   {
+    "merged_at": "2026-11-21T02:36:01Z",
+    "sha": "0b6424dee4",
+    "pr": 4564
+   },
+   {
+    "merged_at": "2026-11-21T02:35:59Z",
+    "sha": "314cff3e30",
+    "pr": 4567
+   },
+   {
+    "merged_at": "2026-11-21T02:24:10Z",
+    "sha": "aa43db66df",
+    "pr": 4599
+   },
+   {
+    "merged_at": "2026-11-21T02:24:10Z",
+    "sha": "54f6fa1201",
+    "pr": 4541
+   },
+   {
+    "merged_at": "2026-11-21T02:24:10Z",
+    "sha": "6db01b957a",
+    "pr": 4586
+   },
+   {
+    "merged_at": "2026-11-21T02:24:08Z",
+    "sha": "e8c563ae1f",
+    "pr": 4600
+   },
+   {
+    "merged_at": "2026-11-21T02:04:08Z",
+    "sha": "ad3d28621a",
+    "pr": 4572
+   },
+   {
+    "merged_at": "2026-11-21T01:54:13Z",
+    "sha": "6a70421b90",
+    "pr": 4403
+   },
+   {
+    "merged_at": "2026-11-21T01:34:53Z",
+    "sha": "54309fd707",
+    "pr": 4556
+   },
+   {
+    "merged_at": "2026-11-21T01:26:52Z",
+    "sha": "e411b43693",
+    "pr": 4547
+   },
+   {
+    "merged_at": "2026-11-20T20:48:17Z",
+    "sha": "d0abe84b6f",
+    "pr": 4592
+   },
+   {
+    "merged_at": "2026-11-20T15:55:50Z",
+    "sha": "a2620892e5",
+    "pr": 4588
+   },
+   {
+    "merged_at": "2026-11-20T13:37:58Z",
+    "sha": "b3564cebeb",
+    "pr": 4584
+   },
+   {
+    "merged_at": "2026-11-20T10:35:36Z",
+    "sha": "39a120e743",
+    "pr": 4524
+   },
+   {
+    "merged_at": "2026-11-20T08:19:28Z",
+    "sha": "fc2a4c0cdd",
+    "pr": 4579
+   },
+   {
+    "merged_at": "2026-11-20T08:08:22Z",
+    "sha": "cabbc78506",
+    "pr": 4580
+   },
+   {
+    "merged_at": "2026-11-20T07:49:38Z",
+    "sha": "5e41b33ce4",
+    "pr": 4577
+   },
+   {
+    "merged_at": "2026-11-20T06:50:07Z",
+    "sha": "a510aebea5",
+    "pr": 4558
+   },
+   {
+    "merged_at": "2026-11-20T06:50:07Z",
+    "sha": "58d0e9333e",
+    "pr": 4546
+   },
+   {
+    "merged_at": "2026-11-20T06:50:07Z",
+    "sha": "79b61c72aa",
+    "pr": 4551
+   },
+   {
+    "merged_at": "2026-11-20T06:50:05Z",
+    "sha": "25ed86a8af",
+    "pr": 4553
+   },
+   {
+    "merged_at": "2026-11-20T06:39:57Z",
+    "sha": "6304e43c20",
+    "pr": 4568
+   },
+   {
+    "merged_at": "2026-11-20T06:35:45Z",
+    "sha": "6303537e90",
+    "pr": 4550
+   },
+   {
+    "merged_at": "2026-11-20T06:35:45Z",
+    "sha": "e4e882e4c1",
+    "pr": 4561
+   },
+   {
+    "merged_at": "2026-11-20T06:35:43Z",
+    "sha": "d8f9e54e5e",
+    "pr": 4563
+   },
+   {
+    "merged_at": "2026-11-20T06:07:26Z",
+    "sha": "e17dc1a656",
+    "pr": 4557
+   },
+   {
+    "merged_at": "2026-11-20T05:59:42Z",
+    "sha": "5a555b65fd",
+    "pr": 4441
+   },
+   {
+    "merged_at": "2026-11-20T05:46:20Z",
+    "sha": "64f1bb0064",
+    "pr": 4538
+   },
+   {
+    "merged_at": "2026-11-20T05:30:28Z",
+    "sha": "080a77bb45",
+    "pr": 4536
+   },
+   {
+    "merged_at": "2026-11-20T05:20:36Z",
+    "sha": "3da3685383",
+    "pr": 4533
+   },
+   {
+    "merged_at": "2026-11-20T05:06:39Z",
+    "sha": "46e54fca8e",
+    "pr": 4542
+   },
+   {
+    "merged_at": "2026-11-20T04:53:04Z",
+    "sha": "09a2394c9b",
+    "pr": 4545
+   },
+   {
+    "merged_at": "2026-11-20T04:39:54Z",
+    "sha": "465b10a2be",
+    "pr": 4537
+   },
+   {
+    "merged_at": "2026-11-20T04:28:15Z",
+    "sha": "4abc10be30",
+    "pr": 4532
+   },
+   {
+    "merged_at": "2026-11-20T04:15:47Z",
+    "sha": "d1e0dc0cc9",
+    "pr": 4521
+   },
+   {
+    "merged_at": "2026-11-20T04:04:50Z",
+    "sha": "e3ef1f0162",
+    "pr": 4527
+   },
+   {
+    "merged_at": "2026-11-20T04:04:50Z",
+    "sha": "433d7c263e",
+    "pr": 4498
+   },
+   {
+    "merged_at": "2026-11-20T04:04:48Z",
+    "sha": "71a4bcfa07",
+    "pr": 4535
+   },
+   {
+    "merged_at": "2026-11-20T03:53:13Z",
+    "sha": "9935760436",
+    "pr": 4529
+   },
+   {
+    "merged_at": "2026-11-20T03:53:12Z",
+    "sha": "4d546e251d",
+    "pr": 4531
+   },
+   {
+    "merged_at": "2026-11-20T03:53:10Z",
+    "sha": "6ae878086a",
+    "pr": 4534
+   },
+   {
+    "merged_at": "2026-11-20T03:43:42Z",
+    "sha": "df3677825d",
+    "pr": 4487
+   },
+   {
+    "merged_at": "2026-11-20T03:30:46Z",
+    "sha": "032d017fd4",
+    "pr": 4530
+   },
+   {
+    "merged_at": "2026-11-20T03:27:43Z",
+    "sha": "e0e6f3614e",
+    "pr": 4513
+   },
+   {
+    "merged_at": "2026-11-20T03:27:43Z",
+    "sha": "d725fa1d18",
+    "pr": 4522
+   },
+   {
+    "merged_at": "2026-11-20T03:27:43Z",
+    "sha": "e4b63e1fd2",
+    "pr": 4519
+   },
+   {
+    "merged_at": "2026-11-20T03:27:40Z",
+    "sha": "5711eae02b",
+    "pr": 4523
+   },
+   {
+    "merged_at": "2026-11-20T03:15:59Z",
+    "sha": "15f75ace30",
+    "pr": 4526
+   },
+   {
+    "merged_at": "2026-11-20T03:06:17Z",
+    "sha": "0cd61d6812",
+    "pr": 4515
+   },
+   {
+    "merged_at": "2026-11-20T02:51:08Z",
+    "sha": "9ab8c9244d",
+    "pr": 4389
+   },
+   {
+    "merged_at": "2026-11-20T02:51:08Z",
+    "sha": "bf65b050a5",
+    "pr": 4504
+   },
+   {
+    "merged_at": "2026-11-20T02:51:06Z",
+    "sha": "c81e771092",
+    "pr": 4514
+   },
+   {
+    "merged_at": "2026-11-20T02:33:43Z",
+    "sha": "71b3035f18",
+    "pr": 4512
+   },
+   {
+    "merged_at": "2026-11-19T21:39:02Z",
+    "sha": "6fe3de6671",
+    "pr": 4502
+   },
+   {
+    "merged_at": "2026-11-19T21:03:49Z",
+    "sha": "a6345c40b9",
+    "pr": 4509
+   },
+   {
+    "merged_at": "2026-11-19T16:17:28Z",
+    "sha": "7f37be713e",
+    "pr": 4505
+   },
+   {
+    "merged_at": "2026-11-19T13:54:17Z",
+    "sha": "eb35f52296",
+    "pr": 4503
+   },
+   {
+    "merged_at": "2026-11-19T09:24:06Z",
+    "sha": "01c02a1066",
+    "pr": 4490
+   },
+   {
+    "merged_at": "2026-11-19T09:14:54Z",
+    "sha": "54cb0bbae4",
+    "pr": 4500
+   },
+   {
+    "merged_at": "2026-11-19T09:01:24Z",
+    "sha": "b84aeb43e1",
+    "pr": 4499
+   },
+   {
+    "merged_at": "2026-11-19T08:00:58Z",
+    "sha": "77777d143d",
+    "pr": 4496
+   },
+   {
+    "merged_at": "2026-11-19T06:29:02Z",
+    "sha": "472a3f0067",
+    "pr": 4486
+   },
+   {
+    "merged_at": "2026-11-19T05:54:32Z",
+    "sha": "28439a4c7b",
+    "pr": 4453
+   },
+   {
+    "merged_at": "2026-11-19T05:54:31Z",
+    "sha": "1d0a17a54d",
+    "pr": 4454
+   },
+   {
+    "merged_at": "2026-11-19T05:54:31Z",
+    "sha": "726f0b3fc3",
+    "pr": 4450
+   },
+   {
+    "merged_at": "2026-11-19T05:54:29Z",
+    "sha": "bbceb81d53",
+    "pr": 4483
+   },
+   {
+    "merged_at": "2026-11-19T04:48:41Z",
+    "sha": "e00c8cb330",
+    "pr": 4489
+   },
+   {
+    "merged_at": "2026-11-19T04:18:10Z",
+    "sha": "c6440d5f70",
+    "pr": 4443
+   },
+   {
+    "merged_at": "2026-11-19T03:56:28Z",
+    "sha": "742d5c8e47",
+    "pr": 4488
+   },
+   {
+    "merged_at": "2026-11-19T03:43:37Z",
+    "sha": "b8a75bbda0",
+    "pr": 4462
+   },
+   {
+    "merged_at": "2026-11-19T03:30:57Z",
+    "sha": "baa5ce3fce",
+    "pr": 4445
+   },
+   {
+    "merged_at": "2026-11-19T03:17:44Z",
+    "sha": "fddf61ecb2",
+    "pr": 4467
+   },
+   {
+    "merged_at": "2026-11-19T03:06:07Z",
+    "sha": "467d7f8f67",
+    "pr": 4482
+   },
+   {
+    "merged_at": "2026-11-19T02:30:28Z",
+    "sha": "4cc0337992",
+    "pr": 4460
+   },
+   {
+    "merged_at": "2026-11-19T02:15:14Z",
+    "sha": "b6c77a89b0",
+    "pr": 4481
+   },
+   {
+    "merged_at": "2026-11-18T21:01:12Z",
+    "sha": "fe41838a31",
+    "pr": 4478
+   },
+   {
+    "merged_at": "2026-11-18T16:11:54Z",
+    "sha": "5faf38695c",
+    "pr": 4475
+   },
+   {
+    "merged_at": "2026-11-18T13:32:37Z",
+    "sha": "22d47e6dfd",
+    "pr": 4471
+   },
+   {
+    "merged_at": "2026-11-18T08:02:16Z",
+    "sha": "43be46208e",
+    "pr": 4466
+   },
+   {
+    "merged_at": "2026-11-18T07:05:58Z",
+    "sha": "afbe4d813a",
+    "pr": 4463
+   },
+   {
+    "merged_at": "2026-11-18T06:46:05Z",
+    "sha": "5ee6dd06d1",
+    "pr": 4461
+   },
+   {
+    "merged_at": "2026-11-18T06:33:35Z",
+    "sha": "8cbc991410",
+    "pr": 4458
+   },
+   {
+    "merged_at": "2026-11-18T05:40:45Z",
+    "sha": "b975e99459",
+    "pr": 4457
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "2642d3ca9d",
+    "pr": 4416
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "bcd23436b3",
+    "pr": 4410
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "a168e3ff72",
+    "pr": 4452
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "ffb4ccd88c",
+    "pr": 4412
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "b3ffc46b6c",
+    "pr": 4409
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "82e9513534",
+    "pr": 4455
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "d49549d2ff",
+    "pr": 4417
+   },
+   {
+    "merged_at": "2026-11-18T05:25:23Z",
+    "sha": "f641d5d822",
+    "pr": 4414
+   },
+   {
+    "merged_at": "2026-11-18T05:25:20Z",
+    "sha": "163544652c",
+    "pr": 4449
+   },
+   {
+    "merged_at": "2026-11-18T05:01:12Z",
+    "sha": "391a516c5e",
+    "pr": 4427
+   },
+   {
+    "merged_at": "2026-11-18T04:45:40Z",
+    "sha": "c2cb5a07e2",
+    "pr": 4346
+   },
+   {
+    "merged_at": "2026-11-18T04:28:20Z",
+    "sha": "b131756e24",
+    "pr": 4451
+   },
+   {
+    "merged_at": "2026-11-18T04:10:50Z",
+    "sha": "e8ebd0f6b0",
+    "pr": 4430
+   },
+   {
+    "merged_at": "2026-11-18T03:59:52Z",
+    "sha": "a8bc437b25",
+    "pr": 4448
+   },
+   {
+    "merged_at": "2026-11-18T03:48:04Z",
+    "sha": "e90ca53b6a",
+    "pr": 4446
+   },
+   {
+    "merged_at": "2026-11-18T03:44:40Z",
+    "sha": "76e1eae0a7",
+    "pr": 4408
+   },
+   {
+    "merged_at": "2026-11-18T03:29:28Z",
+    "sha": "ce67366b5d",
+    "pr": 4425
+   },
+   {
+    "merged_at": "2026-11-18T03:16:38Z",
+    "sha": "425458b482",
+    "pr": 4429
+   },
+   {
+    "merged_at": "2026-11-17T21:29:56Z",
+    "sha": "52a83249bb",
+    "pr": 4439
+   },
+   {
+    "merged_at": "2026-11-17T16:41:17Z",
+    "sha": "50d2944f66",
+    "pr": 4434
+   },
+   {
+    "merged_at": "2026-11-17T14:35:27Z",
+    "sha": "1b9315a7e4",
+    "pr": 4431
+   },
+   {
+    "merged_at": "2026-11-17T14:23:57Z",
+    "sha": "1189bc94aa",
+    "pr": 4407
+   },
+   {
+    "merged_at": "2026-11-17T13:46:35Z",
+    "sha": "dd67c4c7de",
+    "pr": 4421
+   },
+   {
+    "merged_at": "2026-11-17T08:43:05Z",
+    "sha": "f120cbb25f",
+    "pr": 4401
+   },
+   {
+    "merged_at": "2026-11-17T08:30:49Z",
+    "sha": "0dbefcf125",
+    "pr": 4422
+   },
+   {
+    "merged_at": "2026-11-17T08:17:55Z",
+    "sha": "66c6ac282d",
+    "pr": 4419
+   },
+   {
+    "merged_at": "2026-11-17T08:11:42Z",
+    "sha": "ee1322c2eb",
+    "pr": 4411
+   },
+   {
+    "merged_at": "2026-11-17T02:59:42Z",
+    "sha": "d9707c6d4c",
+    "pr": 4402
+   },
+   {
+    "merged_at": "2026-11-17T02:46:27Z",
+    "sha": "e7c4d5009e",
+    "pr": 4406
+   },
+   {
+    "merged_at": "2026-11-17T02:23:38Z",
+    "sha": "0ebb27194e",
+    "pr": 4400
+   },
+   {
+    "merged_at": "2026-11-16T22:36:12Z",
+    "sha": "be6017f21c",
+    "pr": 4399
+   },
+   {
+    "merged_at": "2026-11-16T16:46:18Z",
+    "sha": "e342a44613",
+    "pr": 4396
+   },
+   {
+    "merged_at": "2026-11-16T16:37:40Z",
+    "sha": "ef86f33ae4",
+    "pr": 4393
+   },
+   {
+    "merged_at": "2026-11-16T13:15:29Z",
+    "sha": "f65af72baa",
+    "pr": 4388
+   },
+   {
+    "merged_at": "2026-11-16T11:16:42Z",
+    "sha": "c95e83f323",
+    "pr": 4386
+   },
+   {
+    "merged_at": "2026-11-16T10:52:35Z",
+    "sha": "9babbf1161",
+    "pr": 4273
+   },
+   {
+    "merged_at": "2026-11-16T10:34:28Z",
+    "sha": "02a985e94b",
+    "pr": 4384
+   },
+   {
+    "merged_at": "2026-11-16T10:22:41Z",
+    "sha": "cbe1cb544b",
+    "pr": 4379
+   },
+   {
+    "merged_at": "2026-11-16T10:09:24Z",
+    "sha": "4afd180fb3",
+    "pr": 4383
+   },
+   {
+    "merged_at": "2026-11-16T08:07:46Z",
+    "sha": "3658770ee9",
+    "pr": 4374
+   },
+   {
+    "merged_at": "2026-11-16T07:44:25Z",
+    "sha": "2cfbb4a90e",
+    "pr": 4375
+   },
+   {
+    "merged_at": "2026-11-16T07:22:17Z",
+    "sha": "c247ec227c",
+    "pr": 4382
+   },
+   {
+    "merged_at": "2026-11-16T05:30:27Z",
+    "sha": "56f4d7f7f7",
+    "pr": 4371
+   },
+   {
+    "merged_at": "2026-11-16T05:18:07Z",
+    "sha": "f46d9751d7",
+    "pr": 4370
+   },
+   {
+    "merged_at": "2026-11-16T05:16:21Z",
+    "sha": "46c8727c88",
+    "pr": 4369
+   },
+   {
+    "merged_at": "2026-11-16T05:05:20Z",
+    "sha": "36555ee7df",
+    "pr": 4372
+   },
+   {
+    "merged_at": "2026-11-16T04:54:28Z",
+    "sha": "0e31e58317",
+    "pr": 4373
+   },
+   {
+    "merged_at": "2026-11-16T03:20:26Z",
+    "sha": "5ebe408a4a",
+    "pr": 4367
+   },
+   {
+    "merged_at": "2026-11-16T02:41:43Z",
+    "sha": "8c30e0ce41",
+    "pr": 4368
+   },
+   {
+    "merged_at": "2026-11-16T01:46:58Z",
+    "sha": "4a05dfdee9",
+    "pr": 4366
+   },
+   {
+    "merged_at": "2026-11-16T01:29:09Z",
+    "sha": "15528967bc",
+    "pr": 4365
+   },
+   {
+    "merged_at": "2026-11-16T01:18:14Z",
+    "sha": "b129c2fd38",
+    "pr": 4364
+   },
+   {
+    "merged_at": "2026-11-15T19:12:05Z",
+    "sha": "da6a940848",
+    "pr": 4360
+   },
+   {
+    "merged_at": "2026-11-15T14:31:24Z",
+    "sha": "c7fe4a0203",
+    "pr": 4356
+   },
+   {
+    "merged_at": "2026-11-15T14:27:35Z",
+    "sha": "75734b9a0b",
+    "pr": 4354
+   },
+   {
+    "merged_at": "2026-11-15T12:20:08Z",
+    "sha": "5123997825",
+    "pr": 4352
+   },
+   {
+    "merged_at": "2026-11-15T07:09:56Z",
+    "sha": "7bbb0b62de",
+    "pr": 4348
+   },
+   {
+    "merged_at": "2026-11-15T01:33:29Z",
+    "sha": "cb6e70634e",
+    "pr": 4341
+   },
+   {
+    "merged_at": "2026-11-14T22:49:37Z",
+    "sha": "ecb1d66d1b",
+    "pr": 4343
+   },
+   {
+    "merged_at": "2026-11-14T21:53:27Z",
+    "sha": "637e309cd6",
+    "pr": 4337
+   },
+   {
+    "merged_at": "2026-11-14T18:34:55Z",
+    "sha": "2d207e1f4a",
+    "pr": 4338
+   },
+   {
+    "merged_at": "2026-11-14T17:51:36Z",
+    "sha": "af0a973ae4",
+    "pr": 4328
+   },
+   {
+    "merged_at": "2026-11-14T13:57:39Z",
+    "sha": "4e4c08016f",
+    "pr": 4335
+   },
+   {
+    "merged_at": "2026-11-14T11:50:19Z",
+    "sha": "8a1a382a55",
+    "pr": 4330
+   },
+   {
+    "merged_at": "2026-11-14T07:39:16Z",
+    "sha": "e35372d624",
+    "pr": 4324
+   },
+   {
+    "merged_at": "2026-11-14T07:22:21Z",
+    "sha": "d2bc9859a5",
+    "pr": 4325
+   },
+   {
+    "merged_at": "2026-11-14T07:05:57Z",
+    "sha": "6261ced095",
+    "pr": 4322
+   },
+   {
+    "merged_at": "2026-11-14T06:54:44Z",
+    "sha": "6b95e32c3b",
+    "pr": 4323
+   },
+   {
+    "merged_at": "2026-11-14T03:21:49Z",
+    "sha": "1911440dca",
+    "pr": 4321
+   },
+   {
+    "merged_at": "2026-11-14T02:47:37Z",
+    "sha": "8a273d76ae",
+    "pr": 4319
+   },
+   {
+    "merged_at": "2026-11-14T02:33:51Z",
+    "sha": "a6d735c0c4",
+    "pr": 4316
+   },
+   {
+    "merged_at": "2026-11-14T02:14:35Z",
+    "sha": "ea19e5398a",
+    "pr": 4317
+   },
+   {
+    "merged_at": "2026-11-13T20:09:53Z",
+    "sha": "40f42bdf1c",
+    "pr": 4318
+   },
+   {
+    "merged_at": "2026-11-13T16:26:20Z",
+    "sha": "bce7be13d9",
+    "pr": 4310
+   },
+   {
+    "merged_at": "2026-11-13T15:39:36Z",
+    "sha": "0e68ac0b3c",
+    "pr": 4312
+   },
+   {
+    "merged_at": "2026-11-13T15:24:49Z",
+    "sha": "5664939dad",
+    "pr": 4311
+   },
+   {
+    "merged_at": "2026-11-13T15:07:00Z",
+    "sha": "26331c6cff",
+    "pr": 4315
+   },
+   {
+    "merged_at": "2026-11-13T15:04:39Z",
+    "sha": "6d8cfa4c9c",
+    "pr": 4313
+   },
+   {
+    "merged_at": "2026-11-13T12:55:19Z",
+    "sha": "72bc747fa9",
+    "pr": 4308
+   },
+   {
+    "merged_at": "2026-11-13T12:41:23Z",
+    "sha": "38584a84d4",
+    "pr": 4309
+   },
    {
     "merged_at": "2026-11-13T12:05:39Z",
     "sha": "874d1b8ecf",
@@ -4335,159 +6410,9 @@
     "merged_at": "2026-11-13T01:28:28Z",
     "sha": "90b4698c79",
     "pr": 4266
-   },
-   {
-    "merged_at": "2026-11-12T20:29:16Z",
-    "sha": "cacf09e39a",
-    "pr": 4268
-   },
-   {
-    "merged_at": "2026-11-12T16:12:09Z",
-    "sha": "e8f1b1793d",
-    "pr": 4263
-   },
-   {
-    "merged_at": "2026-11-12T15:57:46Z",
-    "sha": "30a9ee9e72",
-    "pr": 4265
-   },
-   {
-    "merged_at": "2026-11-12T15:46:42Z",
-    "sha": "8d7f8ffe8a",
-    "pr": 4262
-   },
-   {
-    "merged_at": "2026-11-12T14:29:53Z",
-    "sha": "05f21ccabe",
-    "pr": 4258
-   },
-   {
-    "merged_at": "2026-11-12T14:15:58Z",
-    "sha": "0a68517636",
-    "pr": 4261
-   },
-   {
-    "merged_at": "2026-11-12T14:00:54Z",
-    "sha": "3bd2b587ec",
-    "pr": 4257
-   },
-   {
-    "merged_at": "2026-11-12T13:44:26Z",
-    "sha": "4d806462de",
-    "pr": 4255
-   },
-   {
-    "merged_at": "2026-11-12T13:30:42Z",
-    "sha": "ce4c14421a",
-    "pr": 4259
-   },
-   {
-    "merged_at": "2026-11-12T13:18:25Z",
-    "sha": "6d81bcbb54",
-    "pr": 4260
-   },
-   {
-    "merged_at": "2026-11-12T07:42:51Z",
-    "sha": "9f0e4851ac",
-    "pr": 4254
-   },
-   {
-    "merged_at": "2026-11-12T06:42:35Z",
-    "sha": "6f654490e2",
-    "pr": 4245
-   },
-   {
-    "merged_at": "2026-11-12T06:29:16Z",
-    "sha": "ff8efc2c41",
-    "pr": 4241
-   },
-   {
-    "merged_at": "2026-11-12T06:15:58Z",
-    "sha": "30b2ab620a",
-    "pr": 4244
-   },
-   {
-    "merged_at": "2026-11-12T06:04:21Z",
-    "sha": "ca5e2b9421",
-    "pr": 4229
-   },
-   {
-    "merged_at": "2026-11-12T05:49:23Z",
-    "sha": "df6e921d34",
-    "pr": 4240
-   },
-   {
-    "merged_at": "2026-11-12T05:34:21Z",
-    "sha": "692667203b",
-    "pr": 4239
-   },
-   {
-    "merged_at": "2026-11-12T05:21:38Z",
-    "sha": "fc10433c36",
-    "pr": 4236
-   },
-   {
-    "merged_at": "2026-11-12T05:06:07Z",
-    "sha": "cd6bedda62",
-    "pr": 4228
-   },
-   {
-    "merged_at": "2026-11-12T04:50:17Z",
-    "sha": "47da74994f",
-    "pr": 4230
-   },
-   {
-    "merged_at": "2026-11-12T04:36:30Z",
-    "sha": "8f04db77da",
-    "pr": 4233
-   },
-   {
-    "merged_at": "2026-11-12T03:14:14Z",
-    "sha": "4b74c68407",
-    "pr": 4247
-   },
-   {
-    "merged_at": "2026-11-12T02:57:11Z",
-    "sha": "38258a29f0",
-    "pr": 3603
-   },
-   {
-    "merged_at": "2026-11-12T02:45:13Z",
-    "sha": "d0a7203384",
-    "pr": 4246
-   },
-   {
-    "merged_at": "2026-11-12T02:31:38Z",
-    "sha": "07cfb3778a",
-    "pr": 4251
-   },
-   {
-    "merged_at": "2026-11-12T02:26:50Z",
-    "sha": "e3d5745bc0",
-    "pr": 4250
-   },
-   {
-    "merged_at": "2026-11-12T02:16:08Z",
-    "sha": "c49b4e19bf",
-    "pr": 3783
-   },
-   {
-    "merged_at": "2026-11-12T02:01:39Z",
-    "sha": "f4e3414b68",
-    "pr": 4248
-   },
-   {
-    "merged_at": "2026-11-12T01:47:44Z",
-    "sha": "b8b00dbd5f",
-    "pr": 4243
-   },
-   {
-    "merged_at": "2026-11-12T01:29:06Z",
-    "sha": "002a232ba5",
-    "pr": 4242
    }
   ],
-  "open_pull_requests_now": 72,
+  "open_pull_requests_now": 167,
   "open_pull_requests_source": "GitHub search API — the same read as live_state.open_pull_requests; a catalogue may carry one open-pull-request number, not two"
  }
 }
