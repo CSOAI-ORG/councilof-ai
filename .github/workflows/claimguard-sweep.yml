@@ -65,7 +65,7 @@ jobs:
 
       - name: Create issue if findings
         if: steps.sweep.outputs.exit_code != '0' || always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
