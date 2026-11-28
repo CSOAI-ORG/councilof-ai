@@ -96,6 +96,33 @@ class LangfuseTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             A.langfuse_score(event, "1" * 32, "0" * 16)
 
+    def test_trace_binding_provenance_is_retained_but_never_verified(self):
+        event = seed_event()
+        fixture = "SYNTHETIC_CONTRACT_FIXTURE_NOT_OBSERVED_TRACE"
+        default = A.langfuse_score(event, "1" * 32)
+        projected = A.langfuse_score(event, "1" * 32, binding_kind=fixture)
+        self.assertEqual(default["metadata"]["trace_binding_kind"], "CALLER_DECLARED_UNVERIFIED")
+        self.assertEqual(projected["metadata"]["trace_binding_kind"], fixture)
+        self.assertFalse(projected["metadata"]["trace_binding_verified"])
+        self.assertEqual(projected["metadata"]["receiver_acceptance"], "NOT_ESTABLISHED")
+        self.assertEqual(default["id"], projected["id"])
+        for bad in (None, "VERIFIED", "ACCEPTED", {"verified": True}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                A.langfuse_score(event, "1" * 32, binding_kind=bad)
+
+    def test_cli_preserves_synthetic_binding_provenance(self):
+        event = seed_event()
+        fixture = "SYNTHETIC_CONTRACT_FIXTURE_NOT_OBSERVED_TRACE"
+        with tempfile.TemporaryDirectory() as temp:
+            root = pathlib.Path(temp)
+            A.E.write_jsonl(str(root / "events.jsonl"), [event])
+            (root / "trace.json").write_text(json.dumps({event["event_id"]: {"trace_id": "1" * 32, "binding_kind": fixture}}))
+            A.main(["langfuse", "--events", str(root / "events.jsonl"), "--trace-map", str(root / "trace.json"), "--out", str(root / "out.json")])
+            metadata = json.loads((root / "out.json").read_text())[0]["metadata"]
+            self.assertEqual(metadata["trace_binding_kind"], fixture)
+            self.assertFalse(metadata["trace_binding_verified"])
+            self.assertEqual(metadata["receiver_acceptance"], "NOT_ESTABLISHED")
+
     def test_mutated_event_cannot_be_projected(self):
         event = seed_event()
         event["state"] = "CONSISTENT"
