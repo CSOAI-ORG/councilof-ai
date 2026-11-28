@@ -1,0 +1,137 @@
+{
+  "episode": {
+    "schema": "csoai.reaction-experiment/0.1",
+    "realm": "OBSERVED",
+    "condition": "NO_HUMAN",
+    "experiment_id": "weight-extension-20261127",
+    "case_id": "five-checkpoint-sampling",
+    "input_sha256": "404945a24d22f2439ac4004060de717ccf0fe8afea450fe8bc233b0b06f0bd77",
+    "method_sha256": "0d5916462e54f6189a9e9c849d13a08a91fefec48bcc66627a460481fb5d9247",
+    "stages": {
+      "request": {
+        "state": "REPORTED",
+        "receipt_sha256": "404945a24d22f2439ac4004060de717ccf0fe8afea450fe8bc233b0b06f0bd77",
+        "source_realm": "OBSERVED"
+      },
+      "method": {
+        "state": "REPORTED",
+        "receipt_sha256": "0d5916462e54f6189a9e9c849d13a08a91fefec48bcc66627a460481fb5d9247",
+        "source_realm": "OBSERVED"
+      },
+      "retrieval": {
+        "state": "REPORTED",
+        "receipt_sha256": "da1df8692995440806eb448a70d34c37001ca70d13438f3170abb502f805dcb6",
+        "source_realm": "OBSERVED"
+      }
+    }
+  },
+  "review": {
+    "schema": "csoai.reaction-experiment-review/0.1",
+    "experiment_id": "weight-extension-20261127",
+    "case_id": "five-checkpoint-sampling",
+    "realm": "OBSERVED",
+    "condition": "NO_HUMAN",
+    "source_sha256": "404945a24d22f2439ac4004060de717ccf0fe8afea450fe8bc233b0b06f0bd77",
+    "method_sha256": "0d5916462e54f6189a9e9c849d13a08a91fefec48bcc66627a460481fb5d9247",
+    "status": "ACCEPTANCE_INCOMPLETE",
+    "missing_stages": [
+      "human_approval",
+      "executor_authority",
+      "executor_response",
+      "effect",
+      "receiver_verification"
+    ],
+    "failed_stages": [],
+    "stages": [
+      {
+        "stage": "request",
+        "state": "REPORTED",
+        "receipt_sha256": "404945a24d22f2439ac4004060de717ccf0fe8afea450fe8bc233b0b06f0bd77"
+      },
+      {
+        "stage": "method",
+        "state": "REPORTED",
+        "receipt_sha256": "0d5916462e54f6189a9e9c849d13a08a91fefec48bcc66627a460481fb5d9247"
+      },
+      {
+        "stage": "human_approval",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "executor_authority",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "executor_response",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "effect",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "receiver_verification",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "retrieval",
+        "state": "REPORTED",
+        "receipt_sha256": "da1df8692995440806eb448a70d34c37001ca70d13438f3170abb502f805dcb6"
+      },
+      {
+        "stage": "payment",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      },
+      {
+        "stage": "repeat_use",
+        "state": "UNKNOWN",
+        "receipt_sha256": null
+      }
+    ],
+    "execute_authorized": false,
+    "human_identity_qualified": false,
+    "effect_independently_accepted": false,
+    "fresh_gspc_measurement": false,
+    "explanation": "Receipt digests and reported states are pointers, not authenticated actors, permitted effects, real human approval or independent recipient acceptance."
+  },
+  "operating_view": {
+    "schema": "csoai.reaction-operating-view/0.1",
+    "view_only": true,
+    "source_authentication_established": false,
+    "execute_authorized": false,
+    "independent_receiver_acceptance_established": false,
+    "actual_buyer_acceptance_established": false,
+    "total_cases": 1,
+    "simulated_cases": 0,
+    "observed_cases": 1,
+    "reported_complete_chains": 0,
+    "independently_qualified_chains": null,
+    "highest_gate": {
+      "stage": "human_approval",
+      "role": "HITL authority owner",
+      "owner_acknowledged": false
+    },
+    "cases": [
+      {
+        "experiment_id": "weight-extension-20261127",
+        "case_id": "five-checkpoint-sampling",
+        "realm": "OBSERVED",
+        "status": "ACCEPTANCE_INCOMPLETE",
+        "missing": [
+          "human_approval",
+          "executor_authority",
+          "executor_response",
+          "effect",
+          "receiver_verification"
+        ],
+        "failed": []
+      }
+    ]
+  }
+}
