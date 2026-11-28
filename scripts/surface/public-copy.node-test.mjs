@@ -91,7 +91,7 @@ test('homepage report link avoids a hardcoded axis count or guaranteed daily del
   assert.match(updates, /Measurement reports/);
   assert.match(updates, /Every source has a date and a scope/);
   assert.match(updates, /Dated summaries and their evidence status/);
-  assert.match(updates, /href="https:\/\/huggingface.co\/datasets\/csoai\/gspc-daily-reports"/);
+  assert.match(updates, /href="https:\/\/huggingface\.co\/datasets\/csoai\/gspc-daily-reports\/tree\/main\/reports"/);
 });
 
 
