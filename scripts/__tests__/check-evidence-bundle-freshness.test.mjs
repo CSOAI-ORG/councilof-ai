@@ -36,6 +36,18 @@ describe("check-evidence-bundle-freshness (E3)", () => {
     expect(res.obligations.every((o) => o.status === "FRESH")).toBe(true);
   });
 
+  it("does not treat a future timestamp as a fresh measurement", () => {
+    const syntheticFuture = structuredClone(sampleBundle);
+    syntheticFuture.cards.c1.card.as_of = "2026-12-10T00:00:00Z";
+    syntheticFuture.cards.c2.card.as_of = "2026-12-10T00:00:00Z";
+    const res = checkBundleFreshness(syntheticFuture, {
+      nowIso: "2026-11-23T07:00:00Z",
+      maxAgeDays: 14,
+    });
+    expect(res.ok).toBe(false);
+    expect(res.obligations.every(o => o.status === "STALE")).toBe(true);
+  });
+
   it("reports STALE when newest card exceeds maxAgeDays", () => {
     const res = checkBundleFreshness(sampleBundle, {
       nowIso: "2026-12-01T00:00:00Z",
