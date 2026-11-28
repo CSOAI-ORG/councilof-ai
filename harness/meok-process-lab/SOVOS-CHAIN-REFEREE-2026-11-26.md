@@ -1,0 +1,41 @@
+# SOVOS chain and referee audit — 26 November 2026
+
+Research continuation of existing two-path Council H02/H03/H08/H09/H15, MEOK process lab, Reaction bridge and the SOVOS evidence-first work. No new public axis, service, scheduler, model promotion or authority.
+
+## Executed
+Run `python3 harness/meok-process-lab/sovos_chain_referee_audit.py` in the pinned checkout with NumPy. The existing lab checks the exact weights and dataset bytes; the audit checks the lab Git blob before importing it. M4 NumPy 2.4.6. No training or external model calls. Report SHA256 7e2bb5634566d48e2fd1288c0926e18b188d4ac19ffdffbfef4357e90e39069c. The public test is already exposed. It has 70 eight-tick synthetic episodes (560 transitions), not actual operational agents or new blind tasks.
+
+Actor member 0 versus exact duplicate output (negative control) or mean of two other members. All share the original data; none is an independent evaluator. Threshold calibrated on 400 validation rows (90th percentile max-component peer discrepancy, 0.08015285817); fixed exploratory error cutoff .10 max component. Independent oracle target used only to assess detection, not as runtime judge input. Peer gate is advisory, no action was held or recovered in the world. Compare teacher forced to actor self-propagating rollout. Observed 61 versus 309 errors; peers detected 36 versus 76, missed 25 versus 233, false holds 38 versus 17. 257/263 bad-prior transitions remained bad under rollout. Conditional association, not causal claim. No independent replay.
+
+Paired input-mode flag flip holds other input features constant; per-layer activation delta recorded, output mean absolute shift .0207067, max .2450924. Counterfactual target unavailable, so accuracy null. This is a process-world flag, not language-model test awareness, hidden reasoning or an agent deceiving a judge. No production inference or changes.
+
+## Next real language-model protocol — proposed
+- Reuse H02 and the existing instrument guard. Author rights-cleared private tasks, freeze bank/method/model/decoding/role assignments before any calls, at least 30 independent task groups per qualified comparison; determine power and sample size from pilot, not correlated variants. Use no released eval bank for training. Match semantic task, permissions, tools and budget.
+- Evaluation cue: neutral / general evaluation / disclosed objective / unrelated objective. Separately vary chain length 1,2,4,8; freeze independent randomization and use reset vs persistent state. Compare sandbox state and legitimate task completion, not model explanation as proof of internal reasoning.
+- Judge modes: same-model fresh independent context; distinct family; independently verified deterministic environment state; qualified human review. Judges see minimum necessary evidence; no answer keys, credentials, scoring access or writable grader state exposed to actor. Keep canonical evaluator isolated; controlled judge interference fixtures use harmless synthetic messages and corrupted evidence only. Distinguish correlated failures, refusal, unsupported self-report, attempted boundary violations, actual effects and unknown. Do not train to evade oversight.
+- White-box open-weight track: hash model, tokenizer, runtime and data manifests; log approved layer summaries and output distributions on fixed probes. Compare checkpoint deltas and activation changes with matched controls; intervene only in sandbox and test causal claims against new holdout. Closed models: black-box observable traces only, no hidden-state claim.
+- Drift: track dataset content, labels, split lineage, retrieval revisions, model weights and runtime separately. Inference normally does not update weights; changes to memory/retrieval are not weight updates. A detected difference does not establish malicious intent. Quarantine ambiguous rights or changed dependencies and route through existing correction/claim-maintenance workflow.
+- Dream/Evolve/RSI: propose bounded offline candidates; compare frozen parent to candidate against private holdout plus safety regressions; human owner approval, versioned rollback, no autonomous promotion or authority uplift. SovSpace/world-rehearsal stays simulated; GSPC admission is separate. Use existing Layer 0 and Evidence Fabric receipts. Actual executor and receiving-party verification remain separate.
+- External references: OpenAI https://openai.com/safety-alignment/eval-production-behavior-gap/ (3 Nov 2026), METR https://metr.org/notes/2026-11-16-measuring-alignment-eval-tells/ (16 Nov), MIB https://proceedings.mlr.press/v267/mueller25a.html. Independent convergent research, not an adoption or priority claim. Compare methods and contribute reproducible bounded results through existing collaboration routes.
+
+## Blockers
+H02 LLM pilot on M4 froze 12 cases × four conditions; no inference because cached Ollama weight blobs absent. Disk space critically low. No model download, paid calls, storage deletion or production changes authorized in this run. Full parallel real-model study, external review and deploy/acceptance not performed.
+
+## 27 November: observed-prior refresh and matched observation budgets
+
+Research continuation in the same process lab, not a new service. The original and follow-up protocols use frozen neural weights, distinct simulator seed banks, matched baseline/evidence-aware modes and the existing pinned world-rehearsal oracle. Each bank has 144 seed groups, 288 eight-tick trajectories and 2,304 predictions per arm. Refreshes restore only the simulator's observed **previous** two states; the current target is never supplied to the predictor. The experiment evaluates prediction recovery, not authority to execute or an actual world intervention. The threshold is fixed on 400 published validation rows.
+
+| Original protocol | Above tolerance | Refreshes |
+|---|---:|---:|
+| Unassisted | 1251 | 0 |
+| Peer-triggered (at most two) | 1118 | 124 |
+| Random two | 647 | 576 |
+| Fixed ticks 2 and 5 | 517 | 576 |
+| All seven prior states | 319 | 2016 |
+| Peer, witness unavailable | 1251 | 0 |
+
+The missing-witness control made 119 unsuccessful requests and reproduced the unassisted errors. The initial implementation did not cap unsuccessful requests; the corrected protocol counts them toward its two-request limit and retains the original initial run locally. Observation count differs between the peer and scheduled strategies, so this comparison is not a matched-cost superiority claim.
+
+On separate simulator seeds, each assisted arm makes exactly 576 refreshes. The fixed ticks 2 and 5 baseline achieved 527 above-tolerance rows (MAE .038009), later ticks 3 and 6 achieved 628 (.041939), the adaptive deadline hybrid achieved 639 (.042847), random achieved 648 (.043081), and unassisted achieved 1296 (.081587). The primary paired hybrid-minus-fixed MAE difference was +.0048383, seed-cluster bootstrap interval [.0030055, .0066165]. Fixed wins this bounded comparison; do not promote adaptive solely because it is more complex. The result does not generalize to arbitrary agent workloads, unknown observation latency, or actual world interventions. A new bank drawn from the same deterministic simulator is not independent real-world evidence. No human authority, paid call, training, GSPC admission, deployment or external review.
+
+Reproduction: from this directory run `python3 sovos_prior_refresh.py --out <new-directory>` or `python3 sovos_prior_refresh.py --protocol equal-budget --out <new-directory>` with NumPy and public pinned source access. Output directories must be new; plan and threshold are written before bank generation, and report and per-episode receipts have exact digests. Original summary, bank, receipt, plan and threshold matched when replayed with the extended script. Retained plans/results: `sovos-prior-refresh-plan-20261127.json`, `sovos-prior-refresh-results-20261127.json`, `sovos-prior-refresh-equal-budget-plan-20261127.json`, `sovos-prior-refresh-equal-budget-results-20261127.json`. Full local receipts retained on M4; independent replay and current-head CI required before public claims.
