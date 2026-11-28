@@ -13,12 +13,13 @@ import { onRequestGet as supplyDoor, parseIssuerMd, EVM_LEDGERS } from "./supply
 import { checkUrlSyntax, checkUrl, guardedFetch, isNonPublicIp, type Resolver } from "../_ras_net";
 import { keccak256, toHex, verifyEip1186, headerHash, rlpDecode, rlpEncode } from "../_evm_proof";
 import { onRequestGet as verifyGet, onRequestPost as verifyPost } from "../verify";
-import { onRequestGet as indexGet } from "../x402/[name]";
+import { onRequestGet as indexGet, onRequestHead as indexHead, indexReadbackFreshness, X402_INDEX_MAX_AGE_SECONDS } from "../x402/[name]";
 import { onRequestGet as manifest } from "../../.well-known/x402.json";
 import { onRequestGet as catalogue } from "../x402";
 import { ESTATE_PAY_TO } from "../_x402_config";
 import { USDC_BASE } from "../_skus";
-import { signPayload, verifyLeaf } from "../../_lib/cardSign";
+import { signPayload, verifyLeaf, sha256Hex } from "../../_lib/cardSign";
+import { RAS_OUTPUT_SCHEMAS } from "../_ras_schemas";
 
 const ORIGIN = "https://councilof.ai";
 const PAY = btoa(JSON.stringify({ x402Version: 2, scheme: "exact", network: "eip155:8453", payload: {} }));
@@ -67,7 +68,7 @@ function stubNet(route: Route, opts: { dohDown?: boolean } = {}): Net {
   return net;
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 // Network-free, but the shared Oracle runner is slow under load; a 5 s default reads as a failure there.
 vi.setConfig({ testTimeout: 30_000 });
 
@@ -600,6 +601,7 @@ describe("/api/x402/index — signed or pending, never invented", () => {
     expect(b.state).toBe("INDEX_PENDING");
     expect(b.index).toBeNull();
     expect(b.latest_unsigned_run).toMatchObject({ signed: false, date: "2026-09-24", readable: true });
+    expect(b.freshness).toBeUndefined(); // unsigned metadata is never promoted to signed freshness
     expect(b.latest_unsigned_run.headline).toBeUndefined(); // an unsigned run's numbers are not re-served as the index
     expect(b.free).toBe(true);
   });
@@ -611,16 +613,27 @@ describe("/api/x402/index — signed or pending, never invented", () => {
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: { X402_INDEX_SIGNED_URL: "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/signed/index-latest.json" }, params: { name: "index" } });
     const b = (await r.json()) as any;
     expect(b.state).toBe("SIGNATURE_INVALID");
+    expect(b.freshness).toBeUndefined();
     expect(b.index).toBeNull();
   });
 
   it("the real 2026-09-27 leaf at the default alias (no env) → SIGNED under the pinned board key; its payload is the index", async () => {
     const raw = readFileSync(fileURLToPath(new URL("../x402/__fixtures__/x402_index_2026-09-27.json", import.meta.url)), "utf8");
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-11-28T00:00:00Z"));
     const net = stubNet((url) => (url.host === "huggingface.co" && url.pathname.endsWith("/signed/index-latest.json") ? new Response(raw, { status: 200 }) : undefined));
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } });
     const b = (await r.json()) as any;
     expect(b.state).toBe("SIGNED");
     expect(b.source).toBe("https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/signed/index-latest.json");
+    const leaf = JSON.parse(raw);
+    expect(b.index).toEqual(leaf.payload);
+    expect(b.signature).toMatchObject({ sha256: leaf.sha256, did: leaf.did, sig_ed25519: leaf.sig_ed25519 });
+    expect(b.source_bytes_sha256).toBe(await sha256Hex(new TextEncoder().encode(raw)));
+    expect(b.freshness).toEqual({
+      state: "STALE", as_of: "2026-09-27T01:11:37Z",
+      age_seconds: (Date.parse("2026-11-28T00:00:00Z") - Date.parse("2026-09-27T01:11:37Z")) / 1000,
+      max_age_seconds: 97200, scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
+    });
     expect(b.index.schema).toBe("csoai.x402-index/0.1");
     expect(b.index.census.partial).toBe(false);
     expect(b.index.pins["summary-2026-09-27.json"]).toBe("5ed2c6488776af15ddce5ecb16ed000458999732123920b06d28aa5ea1c578e4");
@@ -635,12 +648,94 @@ describe("/api/x402/index — signed or pending, never invented", () => {
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } });
     const b = (await r.json()) as any;
     expect(b.state).not.toBe("SIGNED");
+    expect(b.freshness).toBeUndefined();
     expect(b.index).toBeNull();
+  });
+
+  it("a current signed census stays byte-bound and never claims current delivery; HEAD has no body", async () => {
+    const raw = readFileSync(fileURLToPath(new URL("../x402/__fixtures__/x402_index_2026-09-27.json", import.meta.url)), "utf8");
+    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-09-27T02:11:37Z"));
+    const net = stubNet((url) => url.host === "huggingface.co" ? new Response(raw) : undefined);
+    const context = { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } };
+    const body = await (await call(indexGet, context)).json() as any;
+    expect(body.state).toBe("SIGNED");
+    expect(body.index).toEqual(JSON.parse(raw).payload);
+    expect(body.freshness).toMatchObject({ state: "WITHIN_READBACK_BUDGET", age_seconds: 3600, current_delivery_proven: false });
+    const head = await call(indexHead, { ...context, request: new Request(context.request, { method: "HEAD" }) });
+    expect(head.status).toBe(200);
+    expect(await head.text()).toBe("");
+    expect(head.headers.get("payment-required")).toBeNull();
+    expect(net.calls).toHaveLength(2);
+  });
+
+  it("an unreadable signed source stays UNCHECKABLE without a freshness assertion", async () => {
+    stubNet(() => { throw new TypeError("offline"); });
+    const body = await (await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } })).json() as any;
+    expect(body.state).toBe("UNCHECKABLE");
+    expect(body.index).toBeNull();
+    expect(body.freshness).toBeUndefined();
   });
 
   it("any other /api/x402/<name> is a 404", async () => {
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/other`), env: {}, params: { name: "other" } });
     expect(r.status).toBe(404);
+  });
+});
+
+
+describe("signed census timestamp freshness — separate from validity and delivery", () => {
+  const asOf = "2026-11-27T01:05:00Z";
+  const timestamp = Date.parse(asOf);
+  const payload = { date: "2026-11-27", as_of: asOf };
+
+  it("uses the existing daily job health window and advertises the same schema", () => {
+    const jobs = JSON.parse(readFileSync(fileURLToPath(new URL("../../../fleet/jobs.yaml", import.meta.url)), "utf8").split("\n").filter(line => !line.startsWith("#")).join("\n"));
+    const job = jobs.jobs.find((row: any) => row.id === "flywheel-x402-daily");
+    expect(X402_INDEX_MAX_AGE_SECONDS).toBe(job.health.max_age_s);
+    expect(RAS_OUTPUT_SCHEMAS.x402_index.properties.freshness.properties.max_age_seconds.const).toBe(X402_INDEX_MAX_AGE_SECONDS);
+  });
+
+  it.each([
+    [0, "WITHIN_READBACK_BUDGET"],
+    [97200000, "WITHIN_READBACK_BUDGET"],
+    [97200001, "STALE"],
+    [97201000, "STALE"],
+  ])("age %i ms reports %s with no delivery assertion", (age, state) => {
+    expect(indexReadbackFreshness(payload, timestamp + Number(age))).toEqual({
+      state, as_of: asOf, age_seconds: Math.floor(Number(age) / 1000),
+      max_age_seconds: 97200, scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
+    });
+  });
+
+  it.each([".1", ".12", ".123"])("accepts UTC fractional seconds %s without losing their age", (fraction) => {
+    const value = asOf.replace("Z", fraction + "Z");
+    expect(indexReadbackFreshness({ ...payload, as_of: value }, Date.parse(value) + 1000)).toMatchObject({
+      state: "WITHIN_READBACK_BUDGET", as_of: value, age_seconds: 1,
+    });
+  });
+
+  it.each([
+    ["missing timestamp", { date: "2026-11-27" }],
+    ["numeric timestamp", { ...payload, as_of: timestamp }],
+    ["missing date", { as_of: asOf }],
+    ["mismatched date", { ...payload, date: "2026-11-26" }],
+    ["impossible day", { date: "2026-02-30", as_of: "2026-02-30T01:05:00Z" }],
+    ["impossible clock", { date: "2026-11-26", as_of: "2026-11-26T24:00:00Z" }],
+    ["offset timestamp", { ...payload, as_of: "2026-11-27T01:05:00+00:00" }],
+    ["missing zone", { ...payload, as_of: "2026-11-27T01:05:00" }],
+    ["overprecise timestamp", { ...payload, as_of: "2026-11-27T01:05:00.1234Z" }],
+    ["future timestamp", { date: "2026-11-28", as_of: "2026-11-28T01:05:00Z" }],
+    ["array", [payload]],
+    ["null", null],
+  ])("%s is UNCHECKABLE, never fresh or zero-aged", (_label, value) => {
+    expect(indexReadbackFreshness(value, timestamp)).toEqual({
+      state: "UNCHECKABLE", as_of: null, age_seconds: null, max_age_seconds: 97200,
+      scope: "SIGNED_CENSUS_TIMESTAMP_ONLY", current_delivery_proven: false,
+    });
+  });
+
+  it.each([NaN, Infinity, -Infinity, 1e20])("invalid observation clock %s is UNCHECKABLE", (now) => {
+    expect(indexReadbackFreshness(payload, now).state).toBe("UNCHECKABLE");
   });
 });
 

@@ -37,6 +37,43 @@ export const LATEST_UNSIGNED = `${HF_BASE}/summary-latest.json`;
 export const DEFAULT_SIGNED_URL = `${HF_BASE}/signed/index-latest.json`;
 const ALLOWED = /^https:\/\/(councilof\.ai\/|csoai\.org\/|huggingface\.co\/datasets\/csoai\/)/;
 
+/**
+ * Response-time display budget, using the existing daily job's 27-hour health window
+ * (fleet/jobs.yaml, flywheel-x402-daily.health.max_age_s). This checks the signed
+ * census timestamp only; it neither reads job health nor proves current delivery.
+ */
+export const X402_INDEX_MAX_AGE_SECONDS = 27 * 60 * 60;
+
+export function indexReadbackFreshness(payload: unknown, nowMs: number) {
+  const fields = payload && typeof payload === "object" && !Array.isArray(payload)
+    ? payload as Record<string, unknown> : {};
+  const unknown = {
+    state: "UNCHECKABLE" as const,
+    as_of: null as string | null,
+    age_seconds: null as number | null,
+    max_age_seconds: X402_INDEX_MAX_AGE_SECONDS,
+    scope: "SIGNED_CENSUS_TIMESTAMP_ONLY" as const,
+    current_delivery_proven: false as const,
+  };
+  const asOf = fields.as_of;
+  if (typeof asOf !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(asOf) ||
+      typeof fields.date !== "string" || fields.date !== asOf.slice(0, 10) ||
+      !Number.isFinite(nowMs) || !Number.isFinite(new Date(nowMs).getTime())) return unknown;
+  const timestamp = Date.parse(asOf);
+  // Date.parse normalizes some impossible days. Round-trip seconds to refuse them.
+  if (!Number.isFinite(timestamp) ||
+      new Date(timestamp).toISOString().slice(0, 19) !== asOf.slice(0, 19) ||
+      timestamp > nowMs) return unknown;
+  const ageMs = nowMs - timestamp;
+  return {
+    ...unknown,
+    state: ageMs <= X402_INDEX_MAX_AGE_SECONDS * 1000 ? "WITHIN_READBACK_BUDGET" as const : "STALE" as const,
+    as_of: asOf,
+    age_seconds: Math.floor(ageMs / 1000),
+  };
+}
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -121,6 +158,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, params })
     ...base,
     state: "SIGNED",
     index: doc.payload,
+    freshness: indexReadbackFreshness(doc.payload, Date.now()),
     signature: { sha256: doc.sha256, did: doc.did ?? null, sig_ed25519: doc.sig_ed25519, checks: v.checks },
     source: signedUrl,
     source_bytes_sha256: await sha256Hex(r.bytes),
