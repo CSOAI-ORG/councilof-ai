@@ -93,6 +93,7 @@ it("refreshes timestamps and the file-index section together, preserving other s
     expect(after).toContain("IMMUTABLE TAIL");
     expect(after).toContain("artifact as_of 2026-11-28T00:00:00Z");
     expect(after).toContain("Files indexed: 3. Bytes indexed: 12.");
+    expect(after).toContain("measured, signed, certified or true.\n## End");
     expect(after).toContain("Still calendar-pending: 2");
   }
   expect(f.runBoth("--check").status).toBe(0);

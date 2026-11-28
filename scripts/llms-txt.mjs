@@ -519,22 +519,22 @@ const timestampsOnly = process.argv.includes("--timestamps-only");
 const timestampsAndIndex = process.argv.includes("--timestamps-and-index-only");
 if (timestampsOnly || timestampsAndIndex) {
   const sections = [
-    ["Derived at generation from https://councilof.ai/interop/ots/manifest.json", otsSection()],
+    ["Derived at generation from https://councilof.ai/interop/ots/manifest.json", otsSection(), "\n"],
     ...(timestampsAndIndex ? [
-      ["Derived at generation from https://councilof.ai/interop/file-index.json", fileIndexSection()],
+      ["Derived at generation from https://councilof.ai/interop/file-index.json", fileIndexSection(), ""],
     ] : []),
   ];
   const plans = ["public/llms.txt", "public/llms-full.txt"].map((file) => {
     const have = fs.readFileSync(p(file), "utf8");
     let want = have;
-    for (const [marker, section] of sections) {
+    for (const [marker, section, separator] of sections) {
       const start = want.indexOf(marker);
       if (start < 0 || want.indexOf(marker, start + marker.length) >= 0) {
         throw new Error(`${file}: expected exactly one section: ${marker}`);
       }
       const end = want.indexOf("\n## ", start);
       if (end < 0) throw new Error(`${file}: section boundary missing: ${marker}`);
-      want = want.slice(0, start) + section.trimEnd() + "\n" + want.slice(end);
+      want = want.slice(0, start) + section.trimEnd() + separator + want.slice(end);
     }
     return { file, have, want };
   });
