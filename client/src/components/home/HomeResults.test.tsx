@@ -44,8 +44,9 @@ describe("homepage result evidence boundary", () => {
     ])
       expect(html).toContain(part);
     expect(html).toContain("Open on Hugging Face");
-    expect(html.match(/<iframe\b/g)).toHaveLength(1);
-    expect(html).toContain('src="https://csoai-gspc-board.static.hf.space/index.html"');
+    expect(html).toContain("Explore the interactive board here");
+    expect(html).not.toContain("<iframe");
+    expect(html).not.toContain("csoai-gspc-board.static.hf.space");
   });
   it("does not invent a zero or show unqualified totals on a partial separation read", () => {
     const html = render({
