@@ -153,6 +153,18 @@ describe("one-byte change", () => {
     expect(rederive(feed, head, signed, OPTS).state).toBe("VERIFIES");
   });
 
+  it("refuses malformed JSON document shapes instead of skipping verification", () => {
+    for (const text of ["null", "false", "0", '""', "[]", "true", "{}", "not json"]) {
+      const invalid = Buffer.from(text);
+      for (const [h, s] of [[head, invalid], [invalid, signed], [invalid, invalid]]) {
+        expect(rederive(feed, h, s, OPTS).state).toBe("DOES_NOT_VERIFY");
+      }
+    }
+    for (const text of ["null", "false", "0", '""', "[]"]) {
+      expect(rederive(Buffer.from(text + "\n"), head, signed, OPTS).state).toBe("DOES_NOT_VERIFY");
+    }
+  });
+
   it("anywhere in events.jsonl breaks the chain or the head — every byte position", () => {
     const missed = [];
     for (let i = 0; i < feed.length; i++) {
