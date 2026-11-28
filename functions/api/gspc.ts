@@ -18,6 +18,7 @@ import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 import { withMeasurementTime } from "./_gspc_measurement_time";
 import { headFromGet } from "./_head";
+import dailyReportHolds from "../../scripts/daily-report/holds.json";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -653,6 +654,15 @@ export const onRequestGet: PagesFunction = async (context) => {
 
   const body = {
     schema: "csoai.gspc-axes/0.5",
+    daily_report_quotation: {
+      policy_as_of: dailyReportHolds.as_of,
+      held_axes: Object.fromEntries(
+        Object.entries(dailyReportHolds.axes).filter(([axisId]) =>
+          selected.some((row) => row.axis === axisId),
+        ),
+      ),
+      note: "Correction IDs for the returned axes. The daily report withholds their figures. Read each axis's limitations and applicable corrections before quoting a figure.",
+    },
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
     doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
@@ -753,8 +763,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         axes: selected.length,
         measured_axes: measured,
         unmeasured_axes: unmeasured,
-        // Retained for consumers that read it. Under the swept canon we quote only
-        // what we measured, so quotable_axes == measured_axes by construction.
+        // Legacy alias of measured_axes. Daily-report holds are in daily_report_quotation.
         quotable_axes: measured,
         public_count: axisCountLine(selected.length, measured),
         // Quote this BESIDE public_count. measured counts axis that carry a run; it has

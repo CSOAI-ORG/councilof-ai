@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { onRequestGet } from "./gspc";
+import dailyReportHolds from "../../scripts/daily-report/holds.json";
 
 // Owner ruling G8, 2026-11-21T02:12Z ("All as recommended" to OWNER-GATES-20261121): the hold on the
 // subject-axis banks covers ten axes (C-2026-1120-01), and the claim-maintenance row rests on neither
@@ -53,7 +54,13 @@ type Row = {
   per_outcome?: Record<string, number>;
 };
 
-async function served(search = ""): Promise<{ axes: Row[] }> {
+type BoardResponse = {
+  axes: Row[];
+  totals: { quotable_axes: number; measured_axes: number };
+  daily_report_quotation: { policy_as_of: string; held_axes: Record<string, string> };
+};
+
+async function served(search = ""): Promise<BoardResponse> {
   (globalThis as unknown as { caches: unknown }).caches = {
     default: { match: async () => undefined, put: async () => undefined },
   };
@@ -62,8 +69,26 @@ async function served(search = ""): Promise<{ axes: Row[] }> {
     env: {},
     waitUntil: () => undefined,
   } as unknown as Parameters<typeof onRequestGet>[0]);
-  return (await res.json()) as { axes: Row[] };
+  return (await res.json()) as BoardResponse;
 }
+
+describe("daily report quotation holds", () => {
+  it("keeps the legacy measurement count and shares the daily publisher's correction IDs", async () => {
+    const board = await served();
+    expect(board.totals.quotable_axes).toBe(board.totals.measured_axes);
+    expect(board.daily_report_quotation.policy_as_of).toBe(dailyReportHolds.as_of);
+    expect(board.daily_report_quotation.held_axes).toEqual(dailyReportHolds.axes);
+  });
+
+  it("limits correction holds to the returned axes", async () => {
+    const governance = await served("?axis=governance");
+    expect(governance.daily_report_quotation.held_axes).toEqual({
+      governance: dailyReportHolds.axes.governance,
+    });
+    const safety = await served("?axis=safety");
+    expect(safety.daily_report_quotation.held_axes).toEqual({});
+  });
+});
 
 const repoBytes = (rel: string): Buffer => readFileSync(fileURLToPath(new URL(`../../${rel}`, import.meta.url)));
 const sha256 = (b: Buffer) => createHash("sha256").update(b).digest("hex");
