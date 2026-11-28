@@ -3,13 +3,12 @@
 //   GET  /api/pals                  discovery: who exists, what each can do
 //   GET  /api/pals/<id>             one staff member
 //   POST /api/pals/<id>/chat        talk to a staff member
-//   POST /api/pals/provision        build your own staff member
+//   POST /api/pals/provision        save a private canonical desk configuration
 //
 // Two things this endpoint will not do:
 //
-//   - It will not let a provisioned PAL publish. A PAL built here is scoped, guarded and
-//     revocable, but it is not a public page and it does not become a measurement. It is an
-//     agent, and it says UNMEASURED like everything else here.
+//   - Private configurations are not public staff, memory, or executable agents.
+//     Owner-scoped access is checked against a signed current account lifecycle.
 //
 //   - It will not let a PAL quote a price, certify anything, or claim to be a human. Those are
 //     checked in _palRuntime before a reply leaves, and again here on the way out.
@@ -18,12 +17,14 @@
 // house staff's scopes are the SAME scopes the /team surface uses, so the two can never describe
 // different people.
 
-import { publicPal, suggestPal, housePals, buildPal, palTextViolations, type Pal } from "./_palRegistry";
+import { publicPal, housePals, type Pal } from "./_palRegistry";
+import { privateDesk, privateProfile, requestedPrivateDesk } from "./_palOwnerProfile";
+import type { AuthEnv } from "./_authCrypto";
 import { talkToPal, type PalChatEnv } from "./_palRuntime";
 import { modelConfigured, resolveModelRoute } from "./_palModel";
 import { headFromGet } from "./_head";
 
-interface Env extends PalChatEnv {
+interface Env extends PalChatEnv, AuthEnv {
   /** KV namespace for PAL memory. Optional: without it, PALs have no memory and say so. */
   PAL_MEMORY_KV?: KVNamespace;
 }
@@ -66,42 +67,16 @@ function houseStaff(): Pal[] {
   return housePals((slug) => HOUSE_DIDS[slug] ?? "", CREATED_AT);
 }
 
-/**
- * Provisioned PALs live in KV.
- *
- * The record is stored under its own key so one PAL's memory and record cannot be read through
- * another. Without the binding, there are no provisioned PALs and the endpoint says so — never
- * an empty list that reads as "no staff exist".
- */
-async function provisionedPals(env: Env): Promise<Pal[]> {
-  if (!env.PAL_MEMORY_KV) return [];
-  const out: Pal[] = [];
-  try {
-    const list = await env.PAL_MEMORY_KV.list({ prefix: "pal:record:" });
-    for (const key of list.keys) {
-      const raw = await env.PAL_MEMORY_KV.get(key.name);
-      if (!raw) continue;
-      try {
-        const p = JSON.parse(raw) as Pal;
-        if (p && p.schema) out.push(p);
-      } catch {
-        /* a record that will not parse is not a PAL; skip it rather than fail the list */
-      }
-    }
-  } catch {
-    /* an unreachable KV yields no provisioned PALs; the endpoint says whether a binding exists */
-  }
-  return out;
-}
-
-async function allPals(env: Env): Promise<Pal[]> {
-  return [...houseStaff(), ...(await provisionedPals(env))];
+/** Public discovery is exclusively the six canonical Council desks. Legacy
+ * caller-supplied records are not trusted, migrated, listed or exposed. */
+function allPals(): Pal[] {
+  return houseStaff();
 }
 
 function json(body: unknown, status = 200, extra: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body, null, 2), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8", ...CORS, ...extra },
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...CORS, ...extra },
   });
 }
 
@@ -137,7 +112,12 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   // GET /api/pals/<id>
   if (path && !path.includes("/")) {
-    const pals = await allPals(ctx.env);
+    const desk = privateDesk(path);
+    if (desk) {
+      const r = await privateProfile(ctx.env,ctx.request,desk,"read");
+      return json(r.body,r.status);
+    }
+    const pals = allPals();
     const pal = pals.find((p) => p.id === path || p.slug === path);
     if (!pal) {
       return json(
@@ -157,7 +137,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     });
   }
   // GET /api/pals — discovery.
-  const pals = await allPals(ctx.env);
+  const pals = allPals();
 
   return json({
     schema: "csoai.pal-registry/0.1",
@@ -172,6 +152,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     model_configured: modelConfigured(ctx.env),
     model_active: resolveModelRoute(ctx.env)?.public_model ?? null,
     provisioned_store_bound: Boolean(ctx.env.PAL_MEMORY_KV),
+    private_profile_contract: "Signed current account; canonical desk configuration only. Not private chat or execution.",
     count: pals.length,
     staff: pals.map((p) => ({
       ...publicPal(p),
@@ -190,7 +171,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       "(functions/mcp/tool-fleet.lock.json) and adding a tool there is a separate lane with its " +
       "own re-probe. This surface does not pretend the tools exist.",
     note:
-      "A staff member you build is scoped to a namespace and can be revoked. It does not become a published measurement.",
+      "Public discovery contains house desks only. Private desk configurations are owner-scoped; no persistent conversation or execution authority is implied.",
   });
 };
 
@@ -201,100 +182,47 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   let body: any = {};
   try {
-    const raw = await ctx.request.text();
-    if (raw) body = JSON.parse(raw);
+    const limit = 24000;
+    const declared = ctx.request.headers.get("content-length");
+    if (declared !== null && (!/^\d+$/.test(declared) || !Number.isSafeInteger(Number(declared)))) {
+      return json({error:"invalid content-length"},400);
+    }
+    if (declared !== null && Number(declared)>limit) return json({error:"body too large"},413);
+    const reader = ctx.request.body?.getReader();
+    if (reader) {
+      const decoder = new TextDecoder("utf-8",{fatal:true});
+      let raw = "", size = 0;
+      try {
+        while (true) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          size += chunk.value.byteLength;
+          if (size > limit) { await reader.cancel().catch(()=>{}); return json({error:"body too large"},413); }
+          raw += decoder.decode(chunk.value,{stream:true});
+        }
+        raw += decoder.decode();
+      } finally { reader.releaseLock(); }
+      if (raw) body = JSON.parse(raw);
+    }
   } catch {
     return json({ error: "body was not JSON" }, 400);
   }
 
-  // POST /api/pals/provision — build a staff member.
+  // Only a canonical desk selection is accepted. No caller-supplied owner,
+  // arbitrary instructions, or public creation of a staff identity.
   if (path === "provision") {
-    const name = String(body?.name ?? "").trim();
-    const oneLine = String(body?.one_line ?? "").trim();
-    if (!name || !oneLine) {
-      return json(
-        { error: "name and one_line are required", why: "A staff member with no name and no purpose is not a staff member." },
-        400,
-      );
-    }
-    if (name.length > 60 || oneLine.length > 200) {
-      return json({ error: "name or one_line is too long" }, 400);
-    }
-
-    // The guard runs on the PROPOSED TEXT, before anything is stored.
-    const violations = palTextViolations(`${name} ${oneLine} ${String(body?.instructions ?? "")}`);
-    if (violations.length) {
-      return json(
-        {
-          error: "the proposed staff member breaks a standing rule",
-          violations,
-          why:
-            "Council of AI measures and never certifies. A staff member whose own description claims certification, a price or a human identity is refused at provisioning, not at answer time.",
-        },
-        422,
-      );
-    }
-
-    if (!ctx.env.PAL_MEMORY_KV) {
-      return json(
-        {
-          error: "provisioning store not bound",
-          why: "PAL_MEMORY_KV is not configured for this deployment, so a staff member built here could not be stored, named or revoked. Refusing rather than pretending it was saved.",
-        },
-        503,
-      );
-    }
-
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24) || "pal";
-    const id = `${slug}-${Math.random().toString(16).slice(2, 8)}`;
-    const pal = buildPal({
-      id,
-      slug,
-      name,
-      one_line: oneLine,
-      owner: String(body?.owner ?? "public"),
-      created_at: new Date().toISOString(),
-      // A provisioned PAL gets no DID until a keypair is provisioned for it. Publishing a DID we
-      // do not hold the private key for would be the forgery the estate forbids, so this field is
-      // empty and the PAL says it is unsigned.
-      did: "",
-      scope: {
-        keywords: Array.isArray(body?.keywords) ? body.keywords.map(String).slice(0, 12) : [],
-        can: Array.isArray(body?.can) ? body.can.map(String).slice(0, 12) : [oneLine],
-        cannot: Array.isArray(body?.cannot) ? body.cannot.map(String).slice(0, 12) : [
-          "certifying anything",
-          "quoting a price",
-          "claiming to be a human",
-          "stating a number no published record carries",
-        ],
-        instructions:
-          String(body?.instructions ?? "") ||
-          `You are ${name}, a staff member of the Council of AI. ${oneLine} Answer only from published Council of AI records and cite the record or endpoint. If no published record answers the question, reply UNMEASURED and say which record would be needed. Never invent a number, a person, a customer or a legal opinion. Never state or imply that you are a human. Never quote a fee.`,
-      },
-    });
-
-    try {
-      await ctx.env.PAL_MEMORY_KV.put(`pal:record:${pal.id}`, JSON.stringify(pal));
-    } catch {
-      return json({ error: "the store refused the write", why: "Nothing was stored." }, 503);
-    }
-
-    return json(
-      {
-        ...publicPal(pal),
-        note:
-          "Stored. This staff member answers from published records and carries every standing rule. It is not a published measurement and it sells nothing. It has no DID yet because no keypair was provisioned for it.",
-        can_chat: `POST /api/pals/${pal.id}/chat`,
-      },
-      201,
-    );
+    const desk = requestedPrivateDesk(body);
+    if (!desk) return json({error:"Supply only a canonical desk identifier; custom staff provisioning is not enabled"},400);
+    const r = await privateProfile(ctx.env,ctx.request,desk,"create");
+    return json(r.body,r.status);
   }
 
   // POST /api/pals/<id>/chat
   const chatMatch = path.match(/^([^/]+)\/chat$/);
   if (chatMatch) {
     const wanted = chatMatch[1];
-    const pals = await allPals(ctx.env);
+    if (privateDesk(wanted)) return json({error:"Private desk chat is not enabled; use the public desk for non-confidential questions"},409);
+    const pals = allPals();
     const pal = pals.find((p) => p.id === wanted || p.slug === wanted);
     if (!pal) {
       return json(
@@ -345,7 +273,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       note: "A descriptor, not a write.",
       paths: {
         provision:
-          "POST /api/pals/provision — build a staff member. Refused when the PAL_MEMORY_KV store is unbound, rather than pretending it was saved.",
+          "POST /api/pals/provision — signed current account and canonical desk selection only. Creates a private configuration, not a private conversation or appointment.",
         chat: "POST /api/pals/<id>/chat — ask one staff member a question.",
       },
       reply_states: ["grounded", "model", "ungrounded", "refused"],

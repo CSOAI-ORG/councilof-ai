@@ -1,0 +1,65 @@
+name: Council operational pulse — public read only
+
+on:
+  workflow_dispatch:
+  schedule:
+    # UTC; actual execution time is written into the receipt, not inferred from cron.
+    - cron: '43 8 * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: council-operational-pulse-public
+  cancel-in-progress: false
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline denial and source-classification regressions
+        run: python3 -m unittest discover -s scripts/operations -p 'test_council_heartbeat.py' -v
+      - name: Observe allowlisted public sources only
+        id: observe
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Record exit for the terminal gate, but let privacy screening and
+          # artifact retention run on a partial readback as well as success.
+          set +e
+          python3 scripts/operations/council_heartbeat.py --live \
+            --output-json council-heartbeat.json --output-md council-heartbeat.md
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Screen generated read-only receipts before retention
+        run: |
+          python3 scripts/privacy/publication_gate.py \
+            --label public-organisation-pulse council-heartbeat.json council-heartbeat.md
+      - name: Retain non-authoritative public-state snapshot
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-operational-pulse-${{ github.run_id }}
+          path: |
+            council-heartbeat.json
+            council-heartbeat.md
+          retention-days: 30
+          if-no-files-found: error
+      - name: Restore failed/partial readback as a failed workflow after retention
+        if: always()
+        env:
+          OBSERVED_EXIT: ${{ steps.observe.outputs.exit_code }}
+        run: |
+          if [ "$OBSERVED_EXIT" != "0" ]; then
+            echo "Public readback incomplete or not run (exit: $OBSERVED_EXIT); retained receipt only if privacy scan passed."
+            exit 1
+          fi

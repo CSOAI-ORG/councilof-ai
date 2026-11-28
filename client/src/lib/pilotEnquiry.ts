@@ -32,6 +32,20 @@ export function wrapperEnquiryHref(pair: string, asOf: string): string {
 export function enquiryPreset(search: string): Pick<EnquiryFields, 'subject' | 'message'> | null {
   const params = new URLSearchParams(search);
   const arm = params.get('arm');
+  if (arm === 'council-membership' || arm === 'council-sponsorship') {
+    const membership = arm === 'council-membership';
+    return {
+      subject: membership ? 'Council of AI organisational membership enquiry' : 'Council of AI sponsorship enquiry',
+      message: [
+        'Organisation and public URL:',
+        'Contact role:',
+        membership ? 'Evidence workflow or recurring support you need:' : 'Programme or public work you would like to support:',
+        'Public output or evidence link, if relevant:',
+        '',
+        'Please reply with eligibility, scope and terms before any payment.',
+      ].join('\n'),
+    };
+  }
   if (arm === 'working-group') return workingGroupEnquiry(params.get('group'), params.get('stage'));
   if (arm === 'invoice') {
     const product = BUYING_ENQUIRIES.find((p) => p.product === params.get('product'));

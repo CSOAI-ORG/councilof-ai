@@ -90,6 +90,9 @@ export default function Memberships() {
           registries and archives, holds scholarly identifiers, and files comments with regulators. Each entry below
           links to the evidence checked, or carries a dated status note when the cited evidence cannot currently be reproduced. Each row says what the evidence does and does not prove. {HONESTY_LINE}
         </p>
+        <p className="mt-3 max-w-3xl text-sm text-slate-700">
+          <Link href="/traction/#membership" className="font-semibold underline underline-offset-4">Explore organisational membership with Council of AI</Link>
+        </p>
         <p className="mt-3 max-w-3xl text-sm text-slate-600">
           Machine-readable: <a className="underline underline-offset-4" href="/interop/memberships.json">/interop/memberships.json</a>{" "}
           (schema {m.schema}, as of <time dateTime={m.as_of}>{m.as_of}</time>, {m.signed ? "signed" : "unsigned — it says so in the file"}).

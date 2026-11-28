@@ -35,14 +35,42 @@ export function watchlist(sourceRegistry = registry) {
   return [...bySource.values()].sort((a, b) => a.id.localeCompare(b.id));
 }
 
+// Bound every source independently: a slow or oversized upstream cannot
+// monopolise the daily research watch or become a change observation.
+export const MAX_SOURCE_BYTES = 5 * 1024 * 1024;
+export const SOURCE_TIMEOUT_MS = 15_000;
+async function readBounded(response) {
+  const reader = response.body?.getReader();
+  if (!reader) return "";
+  const decoder = new TextDecoder();
+  let bytes = 0, body = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MAX_SOURCE_BYTES) {
+        // Do not wait on a misbehaving upstream cancellation promise.
+        void reader.cancel().catch(() => {});
+        throw new Error("FETCH_FAILED (source exceeds byte budget)");
+      }
+      body += decoder.decode(value, { stream: true });
+    }
+    return body + decoder.decode();
+  } finally {
+    reader.releaseLock();
+  }
+}
+
 export async function fingerprint(url, fetchImpl = fetch) {
   const response = await fetchImpl(url, {
     headers: { "user-agent": "csoai-gspc-research-watch/0.1 (+https://councilof.ai)" },
     redirect: "follow",
+    signal: AbortSignal.timeout(SOURCE_TIMEOUT_MS),
   });
   const lastModified = response.headers.get("last-modified") || "";
   const etag = response.headers.get("etag") || "";
-  let body = await response.text();
+  let body = await readBounded(response);
   const rawSha = sha(body);
   if (!fetchOk({ status: response.status, bodyLength: body.length, bodySha256: rawSha })) {
     throw new Error(`FETCH_FAILED (HTTP ${response.status}, ${body.length} bytes${rawSha === EMPTY_SHA256 ? ", empty-body hash" : ""})`);

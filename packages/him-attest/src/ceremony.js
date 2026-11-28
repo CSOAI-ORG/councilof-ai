@@ -12,6 +12,7 @@ import crypto from 'node:crypto';
 
 const COUNCIL = 'https://councilof.ai';
 const FORBIDDEN = /\b(certif|accredit|conformity (assessment|opinion)|approved complian)\w*/i;
+const PACK_STATEMENT = "Human-in-the-loop attestation of evidence. Machine checkpoints carry signed measurement evidence; human checkpoints carry named human decisions. This is not conformity certification and grants no regulatory status.";
 const FRAMEWORK_SLUG = /^(?:eu-ai-act-art50|eu-ai-act-art53|dora-art28-30|cra|iso-42001-lite|nist-ai-rmf-lite)$/;
 
 const stable = (o) => JSON.stringify(o, Object.keys(o).sort ? undefined : undefined);
@@ -33,7 +34,7 @@ export async function fetchBundle(fetchImpl, obligation, subjectFilter) {
     const re = new RegExp(subjectFilter, 'i');
     cards = cards.filter(c => re.test(c.subject || ''));
   }
-  return { state: j.state || 'UNKNOWN', cards, relevant: j.relevant_signed_cards ?? cards.length };
+  return { state: j.state || 'UNKNOWN', cards, relevant: subjectFilter ? cards.length : (j.relevant_signed_cards ?? cards.length) };
 }
 
 async function fetchBoard(fetchImpl) {
@@ -86,7 +87,7 @@ export async function runCeremony({ frameworkSlug, frameworksDir, subject, fetch
     schema: 'csoai.him-attestation-pack/0.1',
     subject, framework: { slug: fw.slug, title: fw.title },
     doctrine: fw.doctrine,
-    statement: 'Human-in-the-loop attestation of evidence. Machine checkpoints carry signed measurement evidence; human checkpoints carry named human decisions. This is not conformity certification and grants no regulatory status.',
+    statement: PACK_STATEMENT,
     as_of: now,
     segments: fw.segments,
     checkpoints,
@@ -115,11 +116,24 @@ export function attachHumanDecision(pack, { task_id, decision, note, humanKeyPub
 export function finalize(pack) {
   const pending = (pack.human_tasks || []).filter(id => !(pack.human_decisions || []).some(d => d.task_id === id));
   if (pending.length) throw new Error(`human-in-the-loop incomplete: ${pending.length} pending → ${pending[0]} (refusing to finalize — we do not fake it)`);
-  const text = JSON.stringify(canonicalize(pack));
+  // The authored disclaimers contain words forbidden in affirmative claims.
+  // Remove only those fixed phrases from their own fields before scanning.
+  const scan = { ...pack };
+  if (scan.statement === PACK_STATEMENT) delete scan.statement;
+  if (typeof scan.doctrine === 'string') {
+    scan.doctrine = scan.doctrine.replace('NOT conformity certification', '')
+      .replace('not accredited audit', '');
+  }
+  if (typeof scan.framework?.title === 'string') {
+    scan.framework = { ...scan.framework, title: scan.framework.title.replace(
+      "(full certification is a CAB's job, never ours)", '') };
+  }
+  const text = JSON.stringify(canonicalize(scan));
   if (FORBIDDEN.test(text)) throw new Error('pack contains forbidden certification language');
   const machine = pack.checkpoints.filter(c => c.status === 'MACHINE-EVIDENCED').length;
   const unmeasured = pack.checkpoints.filter(c => c.status === 'UNMEASURED').length;
-  const human = pack.checkpoints.filter(c => c.status === 'HUMAN-REQUIRED').length;
+  const latest = new Map((pack.human_decisions || []).map(row => [row.task_id, row.decision]));
+  const human = [...new Set(pack.human_tasks || [])].filter(id => latest.get(id) === 'SIGNED').length;
   return {
     schema: 'csoai.him-attestation-manifest/0.1',
     ceremony_sha256: pack.ceremony_sha256,

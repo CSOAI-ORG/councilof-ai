@@ -1,4 +1,4 @@
-# Competitive Landscape (Day 33)
+> **HISTORICAL / NOT CURRENTLY VERIFIED (24 November 2026).** This archived competitive worksheet includes pricing, customer/reach and BFT claims that are **not evidenced to procurement or technical assurance standards**. In particular, named AI roles are not independently credentialed Byzantine fault-tolerant voters; marketplace counts/downloads do not establish unique adopters; and competitors' quoted prices should not be presented without dated, primary quotes. Do **not** copy the claims below into a current website, sales proposal, investor memo or public GSPC report as independently established facts. For the source-linked, qualified present assessment and business plan, see [2026-11-24 competitor intelligence and operating model](../operations/2026-11-24-PEER-BENCHMARK-OPERATING-MODEL.md). Original content is preserved for audit history.\n\n# Competitive Landscape (Day 33)
 
 ## Direct Competitors (AI Compliance / Governance)
 

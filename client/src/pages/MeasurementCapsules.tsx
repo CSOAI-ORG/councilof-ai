@@ -392,6 +392,15 @@ export default function MeasurementCapsules() {
           capsule we hold about that URL, and a button on each that recomputes its id, its Merkle path and the index signature in
           your browser.
         </p>
+        <h3 className="mt-5 text-base font-bold text-slate-900">Try a published example</h3>
+        <p className="mt-1 text-slate-700">
+          Start with the A2A batch on the{" "}
+          <a className="underline underline-offset-4" href="/measurement-capsules/v0.2/">published files page</a>.
+          Its batch entry links the independent checker, the pinned input archive and the scope of the reproduction.
+          The{" "}
+          <a className="underline underline-offset-4" href="/measurement-capsules/v0.2/anchors.json">anchor manifest</a>{" "}
+          gives the index and timestamp-proof digests for this release.
+        </p>
         <h3 className="mt-5 text-base font-bold text-slate-900">From the command line</h3>
         <ol className="mt-1 list-decimal space-y-1.5 pl-5 text-slate-700">
           <li>
