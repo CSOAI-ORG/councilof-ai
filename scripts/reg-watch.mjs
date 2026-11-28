@@ -28,7 +28,7 @@
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { assessFingerprint, fetchOk, EMPTY_SHA256 } from "./reg-watch-policy.mjs";
+import { assessFingerprint, fetchOk, EMPTY_SHA256, boundedRegulationRead } from "./reg-watch-policy.mjs";
 
 // The watchlist: instrument id → { url, note }. ELI/permanent URLs only.
 const WATCH = {
@@ -62,17 +62,12 @@ const sha = (s) => createHash("sha256").update(s).digest("hex");
 
 /** Fingerprint = stable headers if present, else body hash with volatile bits stripped. */
 async function fingerprint(url) {
-  const res = await fetch(url, {
-    headers: { "user-agent": "csoai-reg-watch/0.1 (+https://councilof.ai; measurement body change-detector)" },
-    redirect: "follow",
-  });
-  const lastMod = res.headers.get("last-modified") || "";
-  const etag = res.headers.get("etag") || "";
-  let body = await res.text();
+  const { status, lastMod, etag, body: responseBody } = await boundedRegulationRead(url);
+  let body = responseBody;
   // fetch_ok gate (harness-router winner): 2xx AND a non-empty body whose sha256 is not the empty-string hash.
   const rawSha = sha(body);
-  if (!fetchOk({ status: res.status, bodyLength: body.length, bodySha256: rawSha })) {
-    throw new Error(`FETCH_FAILED (HTTP ${res.status}, ${body.length} bytes${rawSha === EMPTY_SHA256 ? ", empty-body hash" : ""})`);
+  if (!fetchOk({ status, bodyLength: body.length, bodySha256: rawSha })) {
+    throw new Error(`FETCH_FAILED (HTTP ${status}, ${body.length} bytes${rawSha === EMPTY_SHA256 ? ", empty-body hash" : ""})`);
   }
   // Strip volatile chrome: session tokens, dates-now, nonces (best-effort, conservative).
   body = body

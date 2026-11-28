@@ -109,3 +109,66 @@ export function assessFingerprint(previous, current, observedAt) {
     },
   };
 }
+
+/** Bounded read of a fixed watchlist URL. A failed transport never supplies a fingerprint.
+ * Preserve Response.text() UTF-8 decoding semantics for existing normalized hashes.
+ * Cancellation is advisory; a stalled transport cannot hold the whole watchdog.
+ */
+export async function boundedRegulationRead(url, {
+  fetcher = fetch, deadlineMs = 30_000, maxBytes = 32 * 1024 * 1024,
+} = {}) {
+  if (!Number.isInteger(deadlineMs) || deadlineMs < 1 || deadlineMs > 30_000 ||
+      !Number.isInteger(maxBytes) || maxBytes < 1 || maxBytes > 32 * 1024 * 1024) {
+    throw new Error("SOURCE_LIMIT");
+  }
+  const controller = new AbortController();
+  let rejectDeadline, reader, response, stopped = false;
+  const deadline = new Promise((_, reject) => { rejectDeadline = reject; });
+  const timer = setTimeout(() => {
+    stopped = true;
+    controller.abort();
+    rejectDeadline(new Error("SOURCE_DEADLINE"));
+  }, deadlineMs);
+  const cancel = stream => {
+    try { void stream?.cancel().catch(() => {}); } catch { /* advisory */ }
+  };
+  const wait = async promise => {
+    const value = await Promise.race([promise, deadline]);
+    if (stopped) throw new Error("SOURCE_DEADLINE");
+    return value;
+  };
+  try {
+    response = await wait(Promise.resolve().then(() => fetcher(url, {
+      headers: { "user-agent": "csoai-reg-watch/0.1 (+https://councilof.ai; measurement body change-detector)" },
+      redirect: "follow", signal: controller.signal,
+    })).then(value => {
+      if (stopped) cancel(value?.body);
+      return value;
+    }));
+    const advertised = response.headers.get("content-length");
+    if (advertised && /^\d+$/.test(advertised) && Number(advertised) > maxBytes) throw new Error("SOURCE_SIZE");
+    if (!response.body?.getReader) throw new Error("SOURCE_BODY_UNAVAILABLE");
+    reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    const parts = [];
+    let bytes = 0;
+    for (;;) {
+      const part = await wait(reader.read());
+      if (part.done) break;
+      bytes += part.value.byteLength;
+      if (bytes > maxBytes) throw new Error("SOURCE_SIZE");
+      parts.push(decoder.decode(part.value, { stream: true }));
+    }
+    parts.push(decoder.decode());
+    return { status: response.status, lastMod: response.headers.get("last-modified") || "",
+      etag: response.headers.get("etag") || "", body: parts.join("") };
+  } catch (error) {
+    stopped = true;
+    controller.abort();
+    cancel(reader || response?.body);
+    throw error;
+  } finally {
+    clearTimeout(timer);
+    try { reader?.releaseLock(); } catch { /* already released */ }
+  }
+}

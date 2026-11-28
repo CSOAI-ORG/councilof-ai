@@ -92,6 +92,7 @@ export const NODE_TEST_FILES = [
   // "No test suite found" in the orphan-coverage step (`npx vitest run council-os ...`).
   'council-os/gspc-pontius-boundary.test.mjs',
   'scripts/watchdog/source-status.test.mjs',
+  'scripts/reg-watch-fetch.node-test.mjs',
   // This bounded synthetic approval demo uses node:test; the same source list is executed by pr-gates.
   'harness/hitl/approval-effect-demo.test.mjs',
   // Separate synthetic process capsule uses node:test, not the Vitest collector.
