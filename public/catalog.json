@@ -4,7 +4,7 @@
   "register": "measurement, not certification — assessed, not certified",
   "updated": "2026-11-02",
   "board": {
-    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED; read its separation state from GET /api/gspc. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
   },
   "products": [
     {
