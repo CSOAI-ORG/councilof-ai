@@ -63,7 +63,7 @@ export function boardCanon(board: GspcBoard) {
   const measured = int(board.totals.measured_axes) ?? measuredAxes.length;
   const unmeasured =
     int(board.totals.unmeasured_axes) ?? (slots !== null ? Math.max(0, slots - measured) : null);
-  /** How many carry a figure that may be quoted. Equal to `measured` today. */
+  /** Legacy measured-axis count alias. Quotation holds are recorded separately. */
   const quotable = int(board.totals.quotable_axes) ?? measured;
   /**
    * The endpoint publishes the rule for quoting these two numbers in its own words
