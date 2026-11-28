@@ -13,6 +13,7 @@ Reads nothing but the index and the batch directories it names; writes (never in
   DIR/v<ver>/index.signed.json            the index's signed sidecar, unchanged
   DIR/v<ver>/index.json.ots               its OpenTimestamps proof, unchanged (when present)
   DIR/v<ver>/anchors.json                 anchor states (--anchors), copied; absent = none claimed
+  DIR/v<ver>/downloads.json               unsigned public paths bound to the exact signed-index digest
   DIR/v<ver>/<batch>/record.json          + record.signed.json + record.json.ots, unchanged
   DIR/v<ver>/<batch>/capsules.jsonl.gz    the capsules, unchanged (--no-capsules omits)
   DIR/v<ver>/<batch>/leaves.json          the sorted capsule ids; must recompute to the batch root
@@ -187,7 +188,7 @@ def main():
     if anchors_raw is not None:
         (vdir / "anchors.json").write_bytes(anchors_raw)
     shards = collections.defaultdict(lambda: {"endpoints": {}, "origins": {}})
-    all_ids, report, unkeyed, slugs = [], [], collections.Counter(), set()
+    all_ids, report, downloads, unkeyed, slugs = [], [], [], collections.Counter(), set()
     for b in idx["batches"]:
         adapter, slug = b["adapter"], batch_slug(idx["batches"], b)
         if slug in slugs:
@@ -202,11 +203,16 @@ def main():
             sys.exit(f"RECORD_VERSION_MISMATCH {adapter}: {rec.get('schema')} under a v{ver} index")
         odir = vdir / slug
         odir.mkdir(parents=True, exist_ok=True)
-        for n in ("record.json", "record.signed.json", "record.json.ots"):
-            if (bdir / n).exists():
-                shutil.copyfile(bdir / n, odir / n)
+        filenames = ("record.json", "record.signed.json", "record.json.ots")
+        paths = {}
+        for name in filenames:
+            if (bdir / name).exists():
+                shutil.copyfile(bdir / name, odir / name)
+                paths[name] = f"{vroot}/{slug}/{name}"
         if not a.no_capsules:
-            shutil.copyfile(bdir / rec["capsules_file"]["path"], odir / pathlib.Path(rec["capsules_file"]["path"]).name)
+            archive_name = pathlib.Path(rec["capsules_file"]["path"]).name
+            shutil.copyfile(bdir / rec["capsules_file"]["path"], odir / archive_name)
+            paths[archive_name] = f"{vroot}/{slug}/{archive_name}"
         ids, keyed = [], 0
         for c, line in iter_capsules(bdir, rec):
             ids.append(c["capsule_id"])
@@ -234,10 +240,21 @@ def main():
         (odir / "leaves.json").write_text(json.dumps({
             "schema": f"csoai.measurement-capsule-leaves/{ver}", "adapter": adapter, "batch": slug, "kind": rec.get("kind", b.get("kind")),
             "merkle_root": root, "rule": rec.get("merkle"), "n": len(ids), "leaves": ids}, separators=(",", ":")) + "\n")
+        paths["leaves.json"] = f"{vroot}/{slug}/leaves.json"
+        downloads.append({
+            "batch": slug, "record_sha256": b["record_sha256"],
+            "merkle_root": root, "paths": paths,
+        })
         all_ids += ids
         report.append({"adapter": adapter, "batch": slug, "n": len(ids), "endpoint_keyed": keyed, "not_endpoint_keyed": unkeyed[slug]})
     if merkle_root(ver, all_ids) != idx["index_root"]:
         sys.exit("INDEX_ROOT_DOES_NOT_RECOMPUTE")
+    download_index = {
+        "schema": "csoai.measurement-capsule-downloads/0.1",
+        "index": f"{vroot}/index.json", "index_sha256": sha(raw),
+        "index_root": idx["index_root"], "batches": downloads,
+    }
+    (vdir / "downloads.json").write_text(json.dumps(download_index, indent=1) + "\n")
     edir = vdir / "endpoints"
     edir.mkdir(exist_ok=True)
     n_endpoints, biggest = 0, 0

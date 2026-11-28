@@ -97,6 +97,9 @@ def render(vdir, publication_dir=None):
          "<h2>Index</h2>", "<ul>",
          f' <li><a href="index.json">index.json</a>: schema {c(idx.get("schema"))}, dated {c(as_of)}, {plural(n, "capsule", "capsules")} in '
          f'{plural(nb, "batch", "batches")}; root {c(idx["index_root"])}; SHA-256 {c(isha)}.</li>']
+    downloads = read_json(vdir / "downloads.json")
+    if downloads and downloads.get("index_sha256") == isha:
+        L.append(' <li><a href="downloads.json">downloads.json</a>: public batch download paths. Verify the files against the signed index.</li>')
     if signed:
         s = signed.get("signature") or {}
         L.append(f' <li><a href="index.signed.json">index.signed.json</a>: Ed25519 signed envelope, signed {c(s.get("signed_at"))} by '

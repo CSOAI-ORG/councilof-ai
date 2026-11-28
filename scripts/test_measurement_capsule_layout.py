@@ -29,6 +29,51 @@ class Vectors(unittest.TestCase):
         self.assertEqual(len(shards), 256)
 
 
+    def test_download_index_uses_public_paths_and_preserves_signed_bytes(self):
+        rows = []
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = pathlib.Path(tmp)
+            for ordinal in range(2):
+                batch = folder / str(ordinal)
+                batch.mkdir()
+                cid = f"{ordinal + 1:064x}"
+                root = layout.merkle_root("0.2", [cid])
+                capsule_bytes = json.dumps({"capsule_id": cid}).encode() + b"\n"
+                (batch / "capsules.jsonl").write_bytes(capsule_bytes)
+                record = {
+                    "schema": "csoai.measurement-capsule-batch/0.2", "merkle_root": root,
+                    "capsules_file": {"path": "capsules.jsonl", "sha256": layout.sha(capsule_bytes)},
+                }
+                raw = json.dumps(record).encode()
+                (batch / "record.json").write_bytes(raw)
+                rows.append({"dir": str(batch), "adapter": "replay", "merkle_root": root, "record_sha256": layout.sha(raw)})
+            root = layout.merkle_root("0.2", [f"{n:064x}" for n in (1, 2)])
+            index_bytes = json.dumps({"schema": "csoai.measurement-capsule-index/0.3", "index_root": root, "batches": rows}).encode()
+            (folder / "index.json").write_bytes(index_bytes)
+            (folder / "index.signed.json").write_bytes(b"unchanged sidecar")
+            args = [sys.executable, str(HERE / "measurement_capsule_layout.py"), "--index", str(folder / "index.json")]
+            for flag in ([], ["--no-capsules"]):
+                with self.subTest(flags=flag):
+                    output = folder / ("no-archives" if flag else "full")
+                    subprocess.run(args + ["--out", str(output)] + flag, capture_output=True, check=True)
+                    vdir = output / "v0.2"
+                    self.assertEqual((vdir / "index.json").read_bytes(), index_bytes)
+                    self.assertEqual((vdir / "index.signed.json").read_bytes(), b"unchanged sidecar")
+                    raw = (vdir / "downloads.json").read_text()
+                    self.assertNotIn(str(folder), raw)
+                    manifest = json.loads(raw)
+                    self.assertEqual(manifest["index_sha256"], layout.sha(index_bytes))
+                    self.assertEqual(manifest["index_root"], root)
+                    self.assertEqual(len(manifest["batches"]), 2)
+                    for row, source in zip(manifest["batches"], rows):
+                        self.assertEqual(row["batch"], f"replay-{source['merkle_root'][:12]}")
+                        self.assertEqual(row["record_sha256"], source["record_sha256"])
+                        names = {"record.json", "leaves.json"} | (set() if flag else {"capsules.jsonl"})
+                        self.assertEqual(set(row["paths"]), names)
+                        for name, path in row["paths"].items():
+                            self.assertEqual(path, f"/measurement-capsules/v0.2/{row['batch']}/{name}")
+                            self.assertTrue((vdir / row["batch"] / name).is_file())
+
     def test_layout_rejects_anchor_manifest_mismatches_before_writing(self):
         root = layout.merkle_root("0.2", [])
         index = {"date": "2026-11-26", "schema": "csoai.measurement-capsule-index/0.3",
