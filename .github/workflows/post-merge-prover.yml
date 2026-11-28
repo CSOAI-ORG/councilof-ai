@@ -46,8 +46,13 @@ jobs:
             echo "no deploy run for $MERGE_SHA (workflow-only change?) — probing anyway after grace"
             sleep 120
           else
+            DEPLOY_OK="wait-unconfirmed"
             for i in $(seq 1 22); do
-              ST=$(gh run view "$RID" --json status,conclusion -q '.status + " " + (.conclusion // "-")')
+              if ! ST=$(timeout 20s gh run view "$RID" --json status,conclusion -q '.status + " " + (.conclusion // "-")'); then
+                echo "could not read deploy run $RID (attempt $i/22)"
+                if [ "$i" -lt 22 ]; then sleep 45; fi
+                continue
+              fi
               echo "deploy run $RID: $ST"
               case "$ST" in
                 "completed success") DEPLOY_OK="green"; break ;;
@@ -174,7 +179,7 @@ jobs:
           PY
 
       - name: Comment the probe report on the merged PR
-        if: always()
+        if: steps.probe.outcome == 'success'
         run: |
           set -euo pipefail
           gh pr comment "$PR_NUMBER" --body-file probe-comment.md
