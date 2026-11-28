@@ -48,7 +48,9 @@ interface Master {
   entries: Entry[];
 }
 
-const ARTIFACT = "/interop/master-consolidation-2026-09-16.json";
+// 2026-11-24 re-issue: private-repo identifiers withheld, same leaves and root as the 2026-09-16 issue.
+const ARTIFACT = "/interop/master-consolidation-2026-11-24.json";
+const STAMP = "/interop/master-consolidation-2026-09-16.json.ots";
 
 export default function EstateIndex() {
   const [m, setM] = useState<Master | null>(null);
@@ -240,8 +242,10 @@ export default function EstateIndex() {
 
           <p className="mt-8 text-sm text-neutral-500">
             The file, and the rule for recomputing the root, are at{" "}
-            <a className="underline" href={ARTIFACT}>{ARTIFACT}</a>. Its OpenTimestamps proof is at{" "}
-            <a className="underline" href={`${ARTIFACT}.ots`}>{ARTIFACT}.ots</a>.
+            <a className="underline" href={ARTIFACT}>{ARTIFACT}</a>. This 2026-11-24 re-issue withholds private-repository identifiers and
+            keeps every leaf and the root unchanged; the OpenTimestamps proof of the same root is the one on
+            the 2026-09-16 issue, at{" "}
+            <a className="underline" href={STAMP}>{STAMP}</a>.
           </p>
         </>
       )}

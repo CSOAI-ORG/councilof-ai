@@ -44,4 +44,25 @@ for (const e of manifest.entries) {
     console.log(`· deploy-exclusions: ${e.path} not present in dist`);
   }
 }
+
+// Withdrawn paths (scripts/withdrawn-from-deploy.json, since 2026-11-24): kept in the repository, never served.
+// Unlike the entries above they are NOT mirrored to Hugging Face and need no redirect; they are simply dropped.
+const withdrawnPath = resolve("scripts/withdrawn-from-deploy.json");
+if (existsSync(withdrawnPath)) {
+  const withdrawn = JSON.parse(readFileSync(withdrawnPath, "utf8"));
+  for (const w of withdrawn.entries || []) {
+    const target = resolve(dist, w.path || "");
+    if (!w.path || !target.startsWith(dist + "/")) {
+      console.error(`✗ withdrawn-from-deploy: refusing unsafe path ${JSON.stringify(w.path)}`);
+      fail = true;
+      continue;
+    }
+    if (existsSync(target)) {
+      rmSync(target, { recursive: true, force: true });
+      console.log(`✓ withdrawn-from-deploy: dropped ${w.path} (${w.kind}; withdrawn ${w.since})`);
+    } else {
+      console.log(`· withdrawn-from-deploy: ${w.path} not present in dist`);
+    }
+  }
+}
 if (fail) process.exit(11);

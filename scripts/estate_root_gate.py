@@ -7,7 +7,7 @@ from the full artifact's own entries and compared to both published copies.
 """
 import hashlib, json, pathlib, sys
 
-FULL = pathlib.Path("public/interop/master-consolidation-2026-09-16.json")
+FULL = pathlib.Path("public/interop/master-consolidation-2026-11-24.json")  # re-issue of 2026-09-16, same leaves and root
 SUMMARY = pathlib.Path("public/interop/master-consolidation-summary.json")
 
 def sha256b(b): return hashlib.sha256(b).hexdigest()
