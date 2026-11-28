@@ -50,7 +50,13 @@ jobs:
           print(f"Index SHA-256 {digest.hex()}, calendar attestation state {state}")
           PYTHON
           python3 scripts/ots_manifest_rebuild.py --apply
-          node scripts/llms-txt.mjs --timestamps-only
+          # Index the exact regenerated records before publishing any of them.
+          # The clean runner has no served build; the existing generator uses its
+          # own HTML transform, not an old dist tree. Keep both llms sections in sync.
+          python3 scripts/build-interop-file-index.py public/interop public/interop/file-index.json scripts/deploy-exclusions.json "$GITHUB_SHA"
+          python3 scripts/build-interop-file-index.py --check public/interop public/interop/file-index.json scripts/deploy-exclusions.json
+          node scripts/llms-txt.mjs --timestamps-and-index-only
+          node scripts/llms-txt.mjs --timestamps-and-index-only --check
       - name: Land via branch + PR (direct push to master is GH006 — required "gates" check)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +67,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/interop/art50-target-index.json public/interop/art50-target-index.json.ots
-          git add public/interop/ots/manifest.json public/llms.txt public/llms-full.txt
+          git add public/interop/ots/manifest.json public/interop/file-index.json public/llms.txt public/llms-full.txt
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
           # The gate must see exactly the tracked bytes that the rolling PR will carry.
           git diff --exit-code

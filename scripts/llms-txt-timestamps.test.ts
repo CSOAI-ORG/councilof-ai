@@ -8,6 +8,7 @@ const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach(root => rmSync(root, { recursive: true, force: true })));
 const marker = "Derived at generation from https://councilof.ai/interop/ots/manifest.json";
 const names = ["llms.txt", "llms-full.txt"];
+const indexMarker = "Derived at generation from https://councilof.ai/interop/file-index.json";
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "csoai-timestamps-"));
   roots.push(root);
@@ -34,16 +35,20 @@ function fixture() {
   // loads (24 Nov 2026): CSOAI's download figures leave those datasets out.
   mkdirSync(join(root, "client/src/data"), { recursive: true });
   copyFileSync(resolve(__dirname, "../client/src/data/hf-self-read-ids.json"), join(root, "client/src/data/hf-self-read-ids.json"));
-  for (const name of names) writeFileSync(join(root, "public", name), `BOARD SNAPSHOT ${name}\n## Timestamps\n\n${marker}\nstale\n\n## Evidence\nIMMUTABLE SNAPSHOT ${name}\n`);
+  for (const name of names) writeFileSync(join(root, "public", name), `BOARD SNAPSHOT ${name}\n## Timestamps\n\n${marker}\nstale\n\n## Evidence\nIMMUTABLE SNAPSHOT ${name}\n## Index\n\n${indexMarker}\nstale index\n\n## End\nIMMUTABLE TAIL\n`);
   writeFileSync(join(root, "public/interop/ots/manifest.json"), JSON.stringify({
     schema: "csoai.ots-manifest/0.4", as_of: "2026-10-11T00:00:00Z",
     counts: { proofs: 7, bitcoin_attested: 5, calendar_pending: 2, subject_absent: 1 },
   }));
+  writeFileSync(join(root, "public/interop/file-index.json"), JSON.stringify({
+    schema: "csoai.interop-file-index/0.1", as_of: "2026-11-28T00:00:00Z",
+    counts: { files: 3, bytes: 12, by_served: { pages: 3 } },
+  }));
   const read = (name: string) => readFileSync(join(root, "public", name), "utf8");
-  const run = (...args: string[]) => spawnSync(process.execPath, [join(root, "scripts/llms-txt.mjs"), "--timestamps-only", ...args], {
+  const runMode = (mode: string, ...args: string[]) => spawnSync(process.execPath, [join(root, "scripts/llms-txt.mjs"), mode, ...args], {
     encoding: "utf8", timeout: 5000, env: { ...process.env, CSOAI_BOARD_URL: "http://127.0.0.1:1/unreachable" },
   });
-  return { root, read, run };
+  return { root, read, run: (...args: string[]) => runMode("--timestamps-only", ...args), runBoth: (...args: string[]) => runMode("--timestamps-and-index-only", ...args) };
 }
 
 it("refreshes only timestamp text offline and is idempotent", () => {
@@ -73,5 +78,31 @@ it("refuses malformed second output before writing the first", () => {
   writeFileSync(join(f.root, "public/llms-full.txt"), "no timestamp boundary\n");
   const before = names.map(f.read);
   expect(f.run().status).toBe(1);
+  expect(names.map(f.read)).toEqual(before);
+});
+
+
+it("refreshes timestamps and the file-index section together, preserving other snapshots", () => {
+  const f = fixture();
+  expect(f.runBoth("--check").status).toBe(1);
+  expect(f.runBoth().status).toBe(0);
+  for (const name of names) {
+    const after = f.read(name);
+    expect(after).toContain(`BOARD SNAPSHOT ${name}`);
+    expect(after).toContain(`IMMUTABLE SNAPSHOT ${name}`);
+    expect(after).toContain("IMMUTABLE TAIL");
+    expect(after).toContain("artifact as_of 2026-11-28T00:00:00Z");
+    expect(after).toContain("Files indexed: 3. Bytes indexed: 12.");
+    expect(after).toContain("measured, signed, certified or true.\n## End");
+    expect(after).toContain("Still calendar-pending: 2");
+  }
+  expect(f.runBoth("--check").status).toBe(0);
+});
+
+it("combined refresh validates the second index section before either output is written", () => {
+  const f = fixture();
+  writeFileSync(join(f.root, "public/llms-full.txt"), f.read("llms-full.txt").replace(indexMarker, "missing index"));
+  const before = names.map(f.read);
+  expect(f.runBoth().status).toBe(1);
   expect(names.map(f.read)).toEqual(before);
 });
