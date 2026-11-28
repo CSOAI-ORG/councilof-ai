@@ -65,9 +65,26 @@ def _value(entry: Any) -> Optional[float]:
 def recount(samples: List[Any], scorer: str) -> Optional[Dict[str, int]]:
     """Count pass/fail from the samples' own score values. None when any row cannot be read."""
     passed = failed = 0
+    identities = set()
+    epoch_modes = {}
     for sample in samples:
         if not isinstance(sample, dict):
             return None
+        sample_id = sample.get("id")
+        epoch = sample.get("epoch")
+        if type(sample_id) not in (str, int) or (isinstance(sample_id, str) and not sample_id.strip()):
+            return None
+        if epoch is not None and (type(epoch) is not int or epoch < 1):
+            return None
+        identity = (type(sample_id), sample_id)
+        mode = epoch is not None
+        if identity in epoch_modes and epoch_modes[identity] != mode:
+            return None
+        epoch_modes[identity] = mode
+        key = (*identity, epoch)
+        if key in identities:
+            return None
+        identities.add(key)
         v = _value((sample.get("scores") or {}).get(scorer))
         if v is None:
             return None
@@ -120,6 +137,7 @@ def load_eval_log(path: str) -> Dict[str, Any]:
         samples = []
         for smp in (getattr(log, "samples", None) or []):
             samples.append({"id": getattr(smp, "id", None),
+                            "epoch": getattr(smp, "epoch", None),
                             "scores": {k: {"value": getattr(v, "value", None)}
                                        for k, v in (getattr(smp, "scores", None) or {}).items()}})
         ev = getattr(log, "eval", None)
@@ -182,7 +200,17 @@ def ingest(raw: bytes, *, read_at: Optional[str] = None, source_url: Optional[st
                         negative_control={"id": "one-sample-verdict-flipped", "expected": None, "got": "NOT_RUN"}, limits=limits)]
     observed = recount(samples, scorer)
     if observed is None:
-        return [E.build(**base, observed={"samples_present": True, "reason": f"a sample row carries no readable {scorer} value"},
+        return [E.build(**base, observed={"samples_present": True, "reason": f"a sample row has unreadable {scorer} value or ambiguous sample identity"},
+                        state="UNCHECKABLE", value=None,
+                        negative_control={"id": "one-sample-verdict-flipped", "expected": None, "got": "NOT_RUN"}, limits=limits)]
+    # A sample/epoch identity can be valid without the aggregate reducer
+    # being supported. Do not equate epoch counts with reduced sample scores.
+    if any(s.get("epoch") not in (None, 1) for s in samples):
+        return [E.build(**base, observed={"samples_present": True, "reason": "epoch reducer not qualified by binary recount"},
+                        state="UNCHECKABLE", value=None,
+                        negative_control={"id": "one-sample-verdict-flipped", "expected": None, "got": "NOT_RUN"}, limits=limits)]
+    if accuracy is None:
+        return [E.build(**base, observed={"samples_present": True, "reason": "declared accuracy absent or unreadable; metric semantics not qualified"},
                         state="UNCHECKABLE", value=None,
                         negative_control={"id": "one-sample-verdict-flipped", "expected": None, "got": "NOT_RUN"}, limits=limits)]
     control = recount(flip_one(samples, scorer), scorer)
